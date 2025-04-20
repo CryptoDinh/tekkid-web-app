@@ -18,7 +18,7 @@ export default function CategoryGrid() {
     const loadCategories = async () => {
       try {
         const response = await fetch('/data/categories.json');
-        const data = await response.json();
+        const data = await response.json() as { categories: Category[] };
         setCategories(data.categories);
       } catch (error) {
         console.error('Error loading categories:', error);
