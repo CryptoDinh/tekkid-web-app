@@ -1,0 +1,32 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Action Games",
+      "slug": "action",
+      "icon": "/images/categories/action.avif",
+      "featured": 1
+    },
+    {
+      "id": 2,
+      "name": "Adventure Games",
+      "slug": "adventure",
+      "icon": "/images/categories/adventure.avif",
+      "featured": 1
+    },
+    {
+      "id": 3,
+      "name": "Puzzle Games",
+      "slug": "puzzle",
+      "icon": "/images/categories/puzzle.avif",
+      "featured": 0
+    },
+    {
+      "id": 4,
+      "name": "Strategy Games",
+      "slug": "strategy",
+      "icon": "/images/categories/strategy.avif",
+      "featured": 0
+    }
+  ]
+}
