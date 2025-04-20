@@ -16,7 +16,9 @@ export interface Game {
   gameLink: string;
   categories?: string[];
 }
-
+interface GamesData {
+  games: Game[];
+}
 interface GameGridProps {
   selectedGameSlug?: string;
   categorySlug?: string;
@@ -33,7 +35,7 @@ export default function GameGrid({ selectedGameSlug, categorySlug }: GameGridPro
     const loadGames = async () => {
       try {
         const response = await fetch('/data/games.json');
-        const data = await response.json();
+        const data = await response.json() as GamesData;
         let filteredGames = data.games;
 
         if (categorySlug) {

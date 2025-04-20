@@ -4,7 +4,7 @@ import React from 'react';
 
 interface GamePlayerProps {
   gameUrl: string;
-  iframeRef: React.RefObject<HTMLIFrameElement | null>;
+  iframeRef: React.RefObject<HTMLIFrameElement>;
 }
 
 export default function GamePlayer({ gameUrl, iframeRef }: GamePlayerProps) {
