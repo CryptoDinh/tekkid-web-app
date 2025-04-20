@@ -15,8 +15,13 @@ export const NavItem = React.memo(({ className }: NavItemProps) => {
     useEffect(() => {
         const updateGridWidth = () => {
             const screenWidth = window.innerWidth;
-            const columns = Math.floor(screenWidth / (cellSize + gap)); // Dynamic columns count
-            setGridWidth(columns * cellSize + (columns - 1) * gap); // Compute total grid width
+            // Calculate maximum number of columns that can fit
+            // For n columns we need: (n * cellSize) + ((n-1) * gap) <= screenWidth
+            // Solving for n: n * cellSize + n * gap - gap <= screenWidth
+            // n * (cellSize + gap) <= screenWidth + gap
+            // n <= (screenWidth + gap) / (cellSize + gap)
+            const columns = Math.floor((screenWidth + gap) / (cellSize + gap));
+            setGridWidth(columns * cellSize + (columns - 1) * gap);
         };
 
         updateGridWidth();
@@ -27,7 +32,7 @@ export const NavItem = React.memo(({ className }: NavItemProps) => {
     if (gridWidth === 0) return null;
 
     return (
-        <div className={`nav-item ${className || ''}`} style={{left: `calc(50% - ${gridWidth / 2}px)` }} >
+        <div className={`nav-item ${className || ''}`} style={{ left: `calc(50% - ${gridWidth / 2}px)` }} >
             <div className="nav-item-top flex justify-center items-center">
                 <Image
                     src="/images/logo.png"
@@ -38,14 +43,14 @@ export const NavItem = React.memo(({ className }: NavItemProps) => {
                 />
             </div>
             <div className="nav-item-bottom flex flex-row justify-evenly items-center">
-                <Link 
-                    href="/" 
+                <Link
+                    href="/"
                     className="p-2 hover:bg-gray-100 rounded-full transition-colors text-[#666] hover:text-[#333]"
                 >
                     <MdHome size={24} />
                 </Link>
-                <Link 
-                    href="/search" 
+                <Link
+                    href="/search"
                     className="p-2 hover:bg-gray-100 rounded-full transition-colors text-[#666] hover:text-[#333]"
                 >
                     <MdSearch size={24} />
