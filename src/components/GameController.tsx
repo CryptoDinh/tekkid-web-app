@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { MdThumbUp, MdThumbDown, MdFlag, MdFullscreen } from 'react-icons/md';
+import { MdThumbUp, MdThumbDown, MdFlag, MdFullscreen, MdFullscreenExit } from 'react-icons/md';
 
 interface GameControllerProps {
   name: string;
@@ -12,6 +12,7 @@ interface GameControllerProps {
   onUnlike: () => void;
   onFlag: () => void;
   onFullscreen: () => void;
+  isFullscreen: boolean; 
 }
 
 export default function GameController({
@@ -22,6 +23,7 @@ export default function GameController({
   onUnlike,
   onFlag,
   onFullscreen,
+  isFullscreen, 
 }: GameControllerProps) {
   return (
     <div className="game-controller">
@@ -32,7 +34,11 @@ export default function GameController({
             alt={name}
             width={40}
             height={40}
-            style={{ objectFit: 'cover' }}
+            style={{ 
+              objectFit: 'cover',
+              width: '40px',
+              height: '40px'
+            }}
             className="rounded-lg"
           />
         </div>
@@ -51,8 +57,8 @@ export default function GameController({
         <button onClick={onFlag} aria-label="Flag">
           <MdFlag size={24} />
         </button>
-        <button onClick={onFullscreen} aria-label="Fullscreen">
-          <MdFullscreen size={24} />
+        <button onClick={onFullscreen} aria-label={isFullscreen ? "Exit fullscreen" : "Fullscreen"}>
+          {isFullscreen ? <MdFullscreenExit size={24} /> : <MdFullscreen size={24} />}
         </button>
       </div>
     </div>

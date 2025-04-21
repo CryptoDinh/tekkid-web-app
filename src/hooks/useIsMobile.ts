@@ -5,12 +5,24 @@ export const useIsMobile = () => {
 
   useEffect(() => {
     const checkIsMobile = () => {
-      setIsMobile(window.innerWidth <= 413);
+      const userAgent =
+        typeof window.navigator === "undefined" ? "" : navigator.userAgent;
+
+      const mobile = Boolean(
+        userAgent.match(
+          /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
+        )
+      );
+
+      // Also check screen width as fallback
+      const isMobileWidth = window.innerWidth <= 768;
+
+      setIsMobile(mobile || isMobileWidth);
     };
-    
+
     checkIsMobile();
     window.addEventListener('resize', checkIsMobile);
-    
+
     return () => window.removeEventListener('resize', checkIsMobile);
   }, []);
 

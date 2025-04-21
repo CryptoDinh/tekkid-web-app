@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import GamePlayer from './GamePlayer';
 import GameController from './GameController';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import Image from 'next/image';
+import { MdArrowBack } from 'react-icons/md';
 
 interface GameContainerProps {
   game: {
@@ -17,44 +18,48 @@ interface GameContainerProps {
 
 export default function GameContainer({ game }: GameContainerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  // const handleFullscreen = async () => {
-  //   const iframe = iframeRef.current;
-  //   if (!iframe) return;
-
-  //   try {
-  //     if (iframe.requestFullscreen) {
-  //       await iframe.requestFullscreen();
-  //     } else if ("webkitRequestFullscreen" in iframe) {
-  //       await (iframe as HTMLIFrameElement & { webkitRequestFullscreen: () => Promise<void> }).webkitRequestFullscreen();
-  //     } else if ("mozRequestFullScreen" in iframe) {
-  //       await (iframe as HTMLIFrameElement & { mozRequestFullScreen: () => Promise<void> }).mozRequestFullScreen();
-  //     } else if ("msRequestFullscreen" in iframe) {
-  //       await (iframe as HTMLIFrameElement & { msRequestFullscreen: () => Promise<void> }).msRequestFullscreen();
-  //     }
-  //   } catch (error) {
-  //     console.error("Error entering fullscreen:", error);
-  //   }
-
-  // };
-
-  const handleFullscreen = () => {
-    if (iframeRef.current) {
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement) {
         setIsFullscreen(false);
-      } else {
-        iframeRef.current.requestFullscreen();
-        setIsFullscreen(true);
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+
+  const handleFullscreen = async () => {
+    if (isFullscreen) {
+      exitFullscreenAndBack();
+    } else {
+      if (containerRef.current) {
+        try {
+          await containerRef.current.requestFullscreen();
+          setIsFullscreen(true);
+        } catch (err) {
+          console.log("Fullscreen request failed:", err);
+        }
       }
     }
   };
 
+  const exitFullscreenAndBack = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    }
+    setIsFullscreen(false);
+  };
+
   if (isMobile && !isFullscreen) {
     return (
-      <div className="game-container">
+      <div ref={containerRef} className={`game-container ${isFullscreen ? 'fullscreen' : ''}`}>
         <div className="play-game-tile">
           <Image
             src={game.image}
@@ -72,12 +77,15 @@ export default function GameContainer({ game }: GameContainerProps) {
             </div>
           </div>
         </div>
+        <div style={{ display: 'none' }}>
+          <GamePlayer gameUrl={game.gameLink} iframeRef={iframeRef} />
+        </div>
       </div>
     );
   }
-  else
+
   return (
-    <div className="game-container">
+    <div ref={containerRef} className={`game-container ${isFullscreen ? 'fullscreen' : ''}`}>
       <GamePlayer gameUrl={game.gameLink} iframeRef={iframeRef} />
       <GameController
         name={game.name}
@@ -87,6 +95,7 @@ export default function GameContainer({ game }: GameContainerProps) {
         onUnlike={() => console.log('Unlike clicked')}
         onFlag={() => console.log('Flag clicked')}
         onFullscreen={handleFullscreen}
+        isFullscreen={isFullscreen}
       />
     </div>
   );

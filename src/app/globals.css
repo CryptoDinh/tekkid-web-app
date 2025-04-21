@@ -306,7 +306,7 @@ main {
 .category-item.featured img {
   grid-column: 1 / -1;
 }
-
+/* This is the game container */
 .game-container {
   width: 100%;
   height: 100%;
@@ -318,6 +318,27 @@ main {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 16px;
 }
+.game-container.fullscreen {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 9999;
+  background: black;
+  margin: 0;
+  padding: 0;
+  grid-column: auto !important;
+  grid-row: auto !important;
+  border-radius: 0px;
+}
+.game-container.fullscreen .game-player,
+.game-container.fullscreen .game-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
 @media screen and (max-width: 980px) {
   .game-container {
     grid-column: span 6 !important;
@@ -359,6 +380,20 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 0;
+}
+/* Wider text container on larger screens */
+@media screen and (min-width: 768px) {
+  .game-controller .game-text {
+    max-width: 300px;
+  }
+}
+
+/* Narrower text container on mobile */
+@media screen and (max-width: 767px) {
+  .game-controller .game-text {
+    max-width: 150px;
+  }
 }
 
 .game-controller .game-text h1 {
@@ -366,12 +401,18 @@ main {
   margin: 0;
   font-weight: 600;
   color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .game-controller .game-text p {
   font-size: 0.85rem;
   margin: 0;
   color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .game-controller .game-actions {
@@ -398,7 +439,6 @@ main {
   color: #333;
 }
 
-/* Adjust GamePlayer to fill remaining space */
 .game-player {
   width: 100%;
   height: 100%;
@@ -411,7 +451,7 @@ main {
   height: 100%;
   border: none;
 }
-
+/* This is the about section */
 .about-section {
   width: 100%;
   margin-top: 0;
