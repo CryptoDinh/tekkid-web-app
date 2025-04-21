@@ -1,4 +1,44 @@
+'use client';
+import React, { useEffect, useState } from 'react';
+
 export default function AboutSection() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Check if the grid is loaded
+    const checkGridLoaded = () => {
+      const mainElement = document.querySelector('main');
+      if (mainElement?.classList.contains('grid-loaded')) {
+        setIsVisible(true);
+      }
+    };
+
+    // Initial check
+    checkGridLoaded();
+
+    // Set up a MutationObserver to watch for class changes on the main element
+    const mainElement = document.querySelector('main');
+    if (mainElement) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+            checkGridLoaded();
+          }
+        });
+      });
+
+      observer.observe(mainElement, { attributes: true });
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, []);
+
+  if (!isVisible) {
+    return null;
+  }
+
   return (
     <article className="about-section">
       <div className="about-title">About GameHub</div>

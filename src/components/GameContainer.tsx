@@ -32,6 +32,25 @@ const useIsIOS = () => {
   return isIOS;
 };
 
+// Add a hook to detect Opera browser
+const useIsOpera = () => {
+  const [isOpera, setIsOpera] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkOpera = () => {
+      // Check for Opera browser
+      const isOperaBrowser = /OPR/.test(navigator.userAgent) || 
+                            /Opera/.test(navigator.userAgent) ||
+                            (navigator.userAgent.includes('Chrome') && navigator.userAgent.includes('OPR'));
+      setIsOpera(isOperaBrowser);
+    };
+    
+    checkOpera();
+  }, []);
+
+  return isOpera;
+};
+
 interface GameContainerProps {
   game: {
     name: string;
@@ -47,9 +66,23 @@ export default function GameContainer({ game }: GameContainerProps) {
   const isMobile = useIsMobile();
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const isIOSDeviceValue = useIsIOS();
+  const isOperaBrowser = useIsOpera();
   
   // Create a stable reference for isIOSDevice
   const isIOSDevice = useMemo(() => isIOSDeviceValue, [isIOSDeviceValue]);
+  
+  // Add a class to the body when in fullscreen mode on Opera iOS
+  useEffect(() => {
+    if (isFullscreen && isIOSDevice && isOperaBrowser) {
+      document.body.classList.add('opera-ios-fullscreen');
+    } else {
+      document.body.classList.remove('opera-ios-fullscreen');
+    }
+    
+    return () => {
+      document.body.classList.remove('opera-ios-fullscreen');
+    };
+  }, [isFullscreen, isIOSDevice, isOperaBrowser]);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
