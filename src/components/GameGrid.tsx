@@ -30,6 +30,7 @@ export default function GameGrid({ selectedGameSlug, categorySlug }: GameGridPro
   const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
   const gridWidth = useGridWidth();
   const [isLoading, setIsLoading] = useState(true);
+  const [loadedVideos, setLoadedVideos] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const loadGames = async () => {
@@ -65,11 +66,23 @@ export default function GameGrid({ selectedGameSlug, categorySlug }: GameGridPro
   }, [isLoading, gridWidth]);
 
   const handleMouseEnter = (game: Game) => {
+    if (game.video_url && !loadedVideos.has(game.slug)) {
+      // Add video source only when hovering for the first time
+      const video = videoRefs.current[game.slug];
+      if (video) {
+        const source = document.createElement('source');
+        source.src = `/videos/${game.slug}/thumbnail.${getVideoSize(game)}.h264.mp4`;
+        source.type = 'video/mp4';
+        video.appendChild(source);
+        setLoadedVideos(prev => new Set(prev).add(game.slug));
+      }
+    }
+
     const video = videoRefs.current[game.slug];
     if (video) {
       video.currentTime = 0;
       video.play().catch(error => {
-        console.error('Error playing video:', error);
+        console.error('Error playing video:', video.src,'->', error);
       });
     }
   };
@@ -125,9 +138,7 @@ export default function GameGrid({ selectedGameSlug, categorySlug }: GameGridPro
                       playsInline
                       muted
                       loop
-                    >
-                      <source src={`/videos/${game.slug}/thumbnail.${getVideoSize(game)}.h264.mp4`} type="video/mp4" />
-                    </video>
+                    />
                   )}
                   <div className="name-overlay">
                     <span>{game.name}</span>

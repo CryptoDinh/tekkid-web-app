@@ -1,22 +1,18 @@
 import { useEffect, useState } from 'react';
 
 export const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  // Initialize with null to avoid hydration mismatch
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   useEffect(() => {
     const checkIsMobile = () => {
-      const userAgent =
-        typeof window.navigator === "undefined" ? "" : navigator.userAgent;
-
+      const userAgent = navigator.userAgent;
       const mobile = Boolean(
         userAgent.match(
           /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
         )
       );
-
-      // Also check screen width as fallback
       const isMobileWidth = window.innerWidth <= 768;
-
       setIsMobile(mobile || isMobileWidth);
     };
 
@@ -26,5 +22,6 @@ export const useIsMobile = () => {
     return () => window.removeEventListener('resize', checkIsMobile);
   }, []);
 
-  return isMobile;
+  // Return false during SSR and initial render
+  return isMobile ?? false;
 };

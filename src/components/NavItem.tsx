@@ -29,6 +29,7 @@ export const NavItem = React.memo(({ className }: NavItemProps) => {
 
         return () => window.removeEventListener("resize", updateGridWidth);
     }, []);
+
     if (gridWidth === 0) return null;
 
     return (

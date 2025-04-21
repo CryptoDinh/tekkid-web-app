@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { MdThumbUp, MdThumbDown, MdFlag, MdFullscreen, MdFullscreenExit } from 'react-icons/md';
-import { IoIosArrowBack } from "react-icons/io";
+import { MdThumbUp, MdThumbDown, MdFlag, MdFullscreen, MdFullscreenExit,MdArrowBackIosNew as BackArrow } from 'react-icons/md';
 import { useIsMobile } from '@/hooks/useIsMobile';
 
 interface GameControllerProps {
@@ -47,7 +46,7 @@ export default function GameController({
         className="game-controller-mini"
         aria-label="Exit fullscreen"
       >
-        <IoIosArrowBack size={24} className="back-icon" />
+        <BackArrow size={24} className="back-icon" />
         <Image
           src="/images/logo.png"
           alt="Exit fullscreen"

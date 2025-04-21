@@ -5,7 +5,32 @@ import GamePlayer from './GamePlayer';
 import GameController from './GameController';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import Image from 'next/image';
-import { MdArrowBack } from 'react-icons/md';
+
+interface NavigatorUserAgentData {
+  getHighEntropyValues(hints: string[]): Promise<{ platform: string }>;
+}
+
+const isIOS = () => {
+  const [isIOS, setIsIOS] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkIOS = () => {
+          if ("userAgentData" in navigator && navigator.userAgentData) {
+            (navigator.userAgentData as NavigatorUserAgentData).getHighEntropyValues(["platform"])
+          .then((data: any) => {
+            setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent) || 
+              (data.platform === "MacIntel" && navigator.maxTouchPoints > 1));
+          });
+      } else {
+        setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent));
+      }
+    };
+    
+    checkIOS();
+  }, []);
+
+  return isIOS ?? false;
+};
 
 interface GameContainerProps {
   game: {
@@ -20,7 +45,8 @@ export default function GameContainer({ game }: GameContainerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const isIOSDevice = isIOS();
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -41,21 +67,48 @@ export default function GameContainer({ game }: GameContainerProps) {
     } else {
       if (containerRef.current) {
         try {
-          await containerRef.current.requestFullscreen();
-          setIsFullscreen(true);
+          if (isIOSDevice) {
+            // For iOS, just use CSS fullscreen
+            setIsFullscreen(true);
+          } else {
+            // For other devices, use Fullscreen API
+            await containerRef.current.requestFullscreen();
+            setIsFullscreen(true);
+          }
         } catch (err) {
           console.log("Fullscreen request failed:", err);
+          // Fallback to CSS fullscreen
+          setIsFullscreen(true);
         }
       }
     }
   };
 
   const exitFullscreenAndBack = () => {
-    if (document.fullscreenElement) {
+    if (isIOSDevice) {
+      setIsFullscreen(false);
+    } else if (document.fullscreenElement) {
       document.exitFullscreen();
     }
     setIsFullscreen(false);
   };
+
+  // Add orientation change handler for iOS
+  useEffect(() => {
+    const handleOrientationChange = () => {
+      if (isFullscreen && window.orientation === 0) { // Portrait
+        exitFullscreenAndBack();
+      }
+    };
+
+    window.addEventListener('orientationchange', handleOrientationChange);
+    return () => window.removeEventListener('orientationchange', handleOrientationChange);
+  }, [isFullscreen]);
+
+  // Don't render anything until we know the device type
+  if (typeof window === 'undefined') {
+    return null;
+  }
 
   if (isMobile && !isFullscreen) {
     return (
