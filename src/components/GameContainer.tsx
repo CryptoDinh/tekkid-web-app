@@ -109,17 +109,32 @@ export default function GameContainer({ game }: GameContainerProps) {
             // For iOS, just use CSS fullscreen
             setIsFullscreen(true);
             document.body.classList.add('game-fullscreen');
+            // Ensure CategoryGrid is hidden
+            const categoryGrid = document.getElementById('categoryGrid');
+            if (categoryGrid) {
+              categoryGrid.style.display = 'none';
+            }
           } else {
             // For other devices, use Fullscreen API
             await containerRef.current.requestFullscreen();
             setIsFullscreen(true);
             document.body.classList.add('game-fullscreen');
+            // Ensure CategoryGrid is hidden
+            const categoryGrid = document.getElementById('categoryGrid');
+            if (categoryGrid) {
+              categoryGrid.style.display = 'none';
+            }
           }
         } catch (err) {
           console.log("Fullscreen request failed:", err);
           // Fallback to CSS fullscreen
           setIsFullscreen(true);
           document.body.classList.add('game-fullscreen');
+          // Ensure CategoryGrid is hidden
+          const categoryGrid = document.getElementById('categoryGrid');
+          if (categoryGrid) {
+            categoryGrid.style.display = 'none';
+          }
         }
       }
     }
@@ -129,21 +144,43 @@ export default function GameContainer({ game }: GameContainerProps) {
     if (isIOSDevice) {
       setIsFullscreen(false);
       document.body.classList.remove('game-fullscreen');
+      // Show CategoryGrid again
+      const categoryGrid = document.getElementById('categoryGrid');
+      if (categoryGrid) {
+        categoryGrid.style.display = '';
+      }
     } else if (document.fullscreenElement) {
       document.exitFullscreen();
     }
     setIsFullscreen(false);
     document.body.classList.remove('game-fullscreen');
+    // Show CategoryGrid again
+    const categoryGrid = document.getElementById('categoryGrid');
+    if (categoryGrid) {
+      categoryGrid.style.display = '';
+    }
   };
 
   // Add orientation change handler for iOS
   useEffect(() => {
     // Function to handle orientation changes without exiting fullscreen
     const handleOrientationChangeOnly = () => {
-      // This function doesn't change the fullscreen state
-      // It just ensures the body class is maintained
+      // This function only maintains the body class when in fullscreen
+      // without changing the fullscreen state
       if (isFullscreen) {
         document.body.classList.add('game-fullscreen');
+        // Ensure CategoryGrid is hidden
+        const categoryGrid = document.getElementById('categoryGrid');
+        if (categoryGrid) {
+          categoryGrid.style.display = 'none';
+        }
+      } else {
+        document.body.classList.remove('game-fullscreen');
+        // Show CategoryGrid again
+        const categoryGrid = document.getElementById('categoryGrid');
+        if (categoryGrid) {
+          categoryGrid.style.display = '';
+        }
       }
     };
 

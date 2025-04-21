@@ -11,34 +11,27 @@ export default function DebugOverlay() {
     screen: {
       width: 0,
       height: 0,
-      orientation: '',
     },
     viewport: {
       width: 0,
       height: 0,
     },
-    grids: {
-      gameGrid: { width: 0, height: 0, columns: 0 },
-      categoryGrid: { width: 0, height: 0, columns: 0 }
+    gameGrid: { 
+      width: 0, 
+      height: 0 
+    },
+    gameContainer: {
+      width: 0,
+      height: 0,
+      isFullscreen: false
     }
   });
 
   useEffect(() => {
     const updateDimensions = () => {
       const gameGrid = document.getElementById('gameGrid');
-      const categoryGrid = document.getElementById('categoryGrid');
+      const gameContainer = document.querySelector('.game-container');
       
-      const getGridInfo = (element: HTMLElement | null) => {
-        if (!element) return { width: 0, height: 0, columns: 0 };
-        const style = window.getComputedStyle(element);
-        const columns = style.gridTemplateColumns.split(' ').length;
-        return {
-          width: element.offsetWidth,
-          height: element.offsetHeight,
-          columns
-        };
-      };
-
       setDimensions({
         window: {
           width: window.innerWidth,
@@ -47,15 +40,19 @@ export default function DebugOverlay() {
         screen: {
           width: window.screen.width,
           height: window.screen.height,
-          orientation: window.screen.orientation?.type || 'unknown',
         },
         viewport: {
           width: document.documentElement.clientWidth,
           height: document.documentElement.clientHeight,
         },
-        grids: {
-          gameGrid: getGridInfo(gameGrid),
-          categoryGrid: getGridInfo(categoryGrid)
+        gameGrid: {
+          width: gameGrid?.offsetWidth || 0,
+          height: gameGrid?.offsetHeight || 0,
+        },
+        gameContainer: {
+          width: gameContainer?.clientWidth || 0,
+          height: gameContainer?.clientHeight || 0,
+          isFullscreen: gameContainer?.classList.contains('fullscreen') || false
         }
       });
     };
@@ -76,7 +73,7 @@ export default function DebugOverlay() {
   return (
     <div style={{
       position: 'fixed',
-      bottom: 16,
+      top: 16,
       right: 16,
       maxWidth: '300px',
       background: 'rgba(0,0,0,0.8)',
@@ -104,19 +101,17 @@ export default function DebugOverlay() {
       <div style={{ marginBottom: '8px' }}>
         <div style={{ color: '#94a3b8', marginBottom: '4px' }}>Screen:</div>
         <div>W: {dimensions.screen.width}px × H: {dimensions.screen.height}px</div>
-        <div>Orientation: {dimensions.screen.orientation}</div>
       </div>
 
       <div style={{ marginBottom: '8px' }}>
         <div style={{ color: '#94a3b8', marginBottom: '4px' }}>Game Grid:</div>
-        <div>W: {dimensions.grids.gameGrid.width}px × H: {dimensions.grids.gameGrid.height}px</div>
-        <div>Columns: {dimensions.grids.gameGrid.columns}</div>
+        <div>W: {dimensions.gameGrid.width}px × H: {dimensions.gameGrid.height}px</div>
       </div>
 
       <div>
-        <div style={{ color: '#94a3b8', marginBottom: '4px' }}>Category Grid:</div>
-        <div>W: {dimensions.grids.categoryGrid.width}px × H: {dimensions.grids.categoryGrid.height}px</div>
-        <div>Columns: {dimensions.grids.categoryGrid.columns}</div>
+        <div style={{ color: '#94a3b8', marginBottom: '4px' }}>Game Container:</div>
+        <div>W: {dimensions.gameContainer.width}px × H: {dimensions.gameContainer.height}px</div>
+        <div>Fullscreen: {dimensions.gameContainer.isFullscreen ? 'Yes' : 'No'}</div>
       </div>
     </div>
   );

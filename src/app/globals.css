@@ -387,6 +387,12 @@ body.game-fullscreen .nav-item {
   display: none !important;
 }
 
+/* Hide CategoryGrid when game is in fullscreen mode */
+body:has(.game-container.fullscreen) #categoryGrid,
+body.game-fullscreen #categoryGrid {
+  display: none !important;
+}
+
 /* Ensure NavItem stays hidden during orientation changes */
 @media screen and (orientation: portrait) {
   body.game-fullscreen .nav-item {
@@ -397,6 +403,22 @@ body.game-fullscreen .nav-item {
 @media screen and (orientation: landscape) {
   body.game-fullscreen .nav-item {
     display: none !important;
+  }
+  
+  /* Ensure CategoryGrid stays hidden in landscape mode */
+  body.game-fullscreen #categoryGrid {
+    display: none !important;
+  }
+}
+
+/* Specific handling for iOS in landscape mode */
+@media screen and (orientation: landscape) {
+  body.game-fullscreen #categoryGrid,
+  body.opera-ios-fullscreen #categoryGrid {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
   }
 }
 
