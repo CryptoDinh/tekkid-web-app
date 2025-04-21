@@ -319,6 +319,7 @@
       "rating": "0",
       "description": "Super Tank Hero is an action shooting game. You can drive a tank to shoot and fight on the battlefield, usually facing seven enemies and obstacles. You need to collect soldiers before the battle, theyll join your team and help you fight.",
       "game_type": "html5",
+      "landscape": true,
       "featured": 0,
       "mobile": 0,
       "video_url": null,

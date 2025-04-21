@@ -438,6 +438,34 @@ main {
   background: #eee;
   color: #333;
 }
+.game-controller-mini {
+  position: fixed;
+  top: var(--gridMargin, 16px);
+  display: flex;
+  align-items: center;
+  border: none;
+  border-radius: 0 16px 16px 0;
+  background: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  z-index: 1000;
+  transition: transform 0.2s ease;
+}
+
+.game-controller-mini:hover {
+  transform: translateX(2px);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.game-controller-mini .back-icon {
+  color: white;
+  width: 24px;
+  height: 24px;
+}
+
+.game-controller-mini img {
+  width: 24px;
+  height: 24px;
+}
 
 .game-player {
   width: 100%;
