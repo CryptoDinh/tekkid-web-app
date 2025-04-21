@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import GamePlayer from './GamePlayer';
 import GameController from './GameController';
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -10,13 +10,13 @@ interface NavigatorUserAgentData {
   getHighEntropyValues(hints: string[]): Promise<{ platform: string }>;
 }
 
-const isIOS = () => {
-  const [isIOS, setIsIOS] = useState<boolean | null>(null);
+const useIsIOS = () => {
+  const [isIOS, setIsIOS] = useState<boolean>(false);
 
   useEffect(() => {
     const checkIOS = () => {
-          if ("userAgentData" in navigator && navigator.userAgentData) {
-            (navigator.userAgentData as NavigatorUserAgentData).getHighEntropyValues(["platform"])
+      if ("userAgentData" in navigator && navigator.userAgentData) {
+        (navigator.userAgentData as NavigatorUserAgentData).getHighEntropyValues(["platform"])
           .then((data: any) => {
             setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent) || 
               (data.platform === "MacIntel" && navigator.maxTouchPoints > 1));
@@ -29,7 +29,7 @@ const isIOS = () => {
     checkIOS();
   }, []);
 
-  return isIOS ?? false;
+  return isIOS;
 };
 
 interface GameContainerProps {
@@ -46,18 +46,23 @@ export default function GameContainer({ game }: GameContainerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-  const isIOSDevice = isIOS();
+  const isIOSDeviceValue = useIsIOS();
+  
+  // Create a stable reference for isIOSDevice
+  const isIOSDevice = useMemo(() => isIOSDeviceValue, [isIOSDeviceValue]);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
       if (!document.fullscreenElement) {
         setIsFullscreen(false);
+        document.body.classList.remove('game-fullscreen');
       }
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.body.classList.remove('game-fullscreen');
     };
   }, []);
 
@@ -70,15 +75,18 @@ export default function GameContainer({ game }: GameContainerProps) {
           if (isIOSDevice) {
             // For iOS, just use CSS fullscreen
             setIsFullscreen(true);
+            document.body.classList.add('game-fullscreen');
           } else {
             // For other devices, use Fullscreen API
             await containerRef.current.requestFullscreen();
             setIsFullscreen(true);
+            document.body.classList.add('game-fullscreen');
           }
         } catch (err) {
           console.log("Fullscreen request failed:", err);
           // Fallback to CSS fullscreen
           setIsFullscreen(true);
+          document.body.classList.add('game-fullscreen');
         }
       }
     }
@@ -87,23 +95,65 @@ export default function GameContainer({ game }: GameContainerProps) {
   const exitFullscreenAndBack = () => {
     if (isIOSDevice) {
       setIsFullscreen(false);
+      document.body.classList.remove('game-fullscreen');
     } else if (document.fullscreenElement) {
       document.exitFullscreen();
     }
     setIsFullscreen(false);
+    document.body.classList.remove('game-fullscreen');
   };
 
   // Add orientation change handler for iOS
   useEffect(() => {
-    const handleOrientationChange = () => {
-      if (isFullscreen && window.orientation === 0) { // Portrait
-        exitFullscreenAndBack();
+    // Function to handle orientation changes without exiting fullscreen
+    const handleOrientationChangeOnly = () => {
+      // This function doesn't change the fullscreen state
+      // It just ensures the body class is maintained
+      if (isFullscreen) {
+        document.body.classList.add('game-fullscreen');
       }
     };
 
-    window.addEventListener('orientationchange', handleOrientationChange);
-    return () => window.removeEventListener('orientationchange', handleOrientationChange);
-  }, [isFullscreen]);
+    const handleOrientationChange = () => {
+      // Use the new function that doesn't exit fullscreen
+      handleOrientationChangeOnly();
+    };
+
+    // Add resize handler to maintain fullscreen state
+    const handleResize = () => {
+      if (isFullscreen) {
+        document.body.classList.add('game-fullscreen');
+      }
+    };
+
+    // For iOS, we need to handle orientation changes differently
+    if (isIOSDevice) {
+      // iOS specific orientation change handling
+      const handleIOSOrientationChange = () => {
+        // Just ensure the body class is maintained
+        if (isFullscreen) {
+          document.body.classList.add('game-fullscreen');
+        }
+      };
+
+      window.addEventListener('orientationchange', handleIOSOrientationChange);
+      window.addEventListener('resize', handleIOSOrientationChange);
+      
+      return () => {
+        window.removeEventListener('orientationchange', handleIOSOrientationChange);
+        window.removeEventListener('resize', handleIOSOrientationChange);
+      };
+    } else {
+      // For non-iOS devices
+      window.addEventListener('orientationchange', handleOrientationChange);
+      window.addEventListener('resize', handleResize);
+      
+      return () => {
+        window.removeEventListener('orientationchange', handleOrientationChange);
+        window.removeEventListener('resize', handleResize);
+      };
+    }
+  }, [isFullscreen, isIOSDevice]);
 
   // Don't render anything until we know the device type
   if (typeof window === 'undefined') {

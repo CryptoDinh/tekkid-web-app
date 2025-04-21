@@ -35,7 +35,7 @@
     "build": "next build",
     "check": "opennextjs-cloudflare build && tsc && wrangler deploy --dry-run",
     "deploy": "opennextjs-cloudflare build && wrangler deploy",
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "lint": "next lint",
     "preview": "opennextjs-cloudflare build && wrangler dev",
     "start": "next start",

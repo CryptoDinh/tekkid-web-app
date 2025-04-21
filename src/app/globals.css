@@ -330,7 +330,7 @@ main {
   height: -webkit-fill-available !important;
   min-height: -webkit-fill-available;
   max-height: -webkit-fill-available;
-  z-index: 9999 !important;
+  z-index: 99999 !important;
   background: black;
   margin: 0;
   padding: 0;
@@ -341,6 +341,29 @@ main {
 /* Hide body overflow when game is fullscreen */
 body:has(.game-container.fullscreen) {
   overflow: hidden;
+}
+
+/* Hide NavItem when game is in fullscreen mode */
+body:has(.game-container.fullscreen) .nav-item {
+  display: none !important;
+}
+
+/* Alternative approach for browsers that don't support :has() */
+body.game-fullscreen .nav-item {
+  display: none !important;
+}
+
+/* Ensure NavItem stays hidden during orientation changes */
+@media screen and (orientation: portrait) {
+  body.game-fullscreen .nav-item {
+    display: none !important;
+  }
+}
+
+@media screen and (orientation: landscape) {
+  body.game-fullscreen .nav-item {
+    display: none !important;
+  }
 }
 
 .game-container.fullscreen .game-player,
@@ -459,12 +482,13 @@ body:has(.game-container.fullscreen) {
   top: var(--gridMargin, 16px);
   display: flex;
   align-items: center;
-  border: none;
+  border: solid 2px #f9fbff;
   border-radius: 0 16px 16px 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: #fff;
   cursor: pointer;
   z-index: 10000;
   transition: transform 0.2s ease;
+  padding: 2px 2px 2px 0px;
 }
 
 .game-controller-mini:hover {
@@ -473,7 +497,7 @@ body:has(.game-container.fullscreen) {
 }
 
 .game-controller-mini .back-icon {
-  color: white;
+  color: rgb(11, 11, 11);
   width: 24px;
   height: 24px;
 }
