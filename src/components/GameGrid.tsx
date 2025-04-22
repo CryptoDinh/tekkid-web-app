@@ -75,16 +75,42 @@ export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullsc
         source.src = `/videos/${game.slug}/thumbnail.${getVideoSize(game)}.h264.mp4`;
         source.type = 'video/mp4';
         video.appendChild(source);
+        
+        // Load the video immediately
+        video.load();
+        
+        // Set up a canplay event listener to play the video as soon as it's ready
+        const playWhenReady = () => {
+          video.play().catch(error => {
+            if (error.name !== 'AbortError') {
+              console.error('Error playing video:', error);
+            }
+          });
+          video.removeEventListener('canplay', playWhenReady);
+        };
+        
+        video.addEventListener('canplay', playWhenReady);
+        
         setLoadedVideos(prev => new Set(prev).add(game.slug));
       }
-    }
-
-    const video = videoRefs.current[game.slug];
-    if (video) {
-      video.currentTime = 0;
-      video.play().catch(error => {
-        console.error('Error playing video:', video.src,'->', error);
-      });
+    } else {
+      // If video is already loaded, just play it
+      const video = videoRefs.current[game.slug];
+      if (video && document.body.contains(video)) {
+        video.currentTime = 0;
+        try {
+          const playPromise = video.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(error => {
+              if (error.name !== 'AbortError') {
+                console.error('Error playing video:', error);
+              }
+            });
+          }
+        } catch (error) {
+          console.error('Error setting up video playback:', error);
+        }
+      }
     }
   };
 
@@ -139,6 +165,7 @@ export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullsc
                       playsInline
                       muted
                       loop
+                      preload='none'
                     />
                   )}
                   <div className="name-overlay">

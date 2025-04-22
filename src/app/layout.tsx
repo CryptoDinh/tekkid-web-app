@@ -24,42 +24,56 @@ export default function RootLayout({
         />
         <link
           rel="preload"
-          href="/fonts/proxima-nova-bold-latin.woff2"
+          href="/fonts/proxima-nova-regular.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/fonts/proxima-nova-regular-cyrillic.woff2"
+          href="/fonts/proxima-nova-medium.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/fonts/proxima-nova-regular-greek-coptic.woff2"
+          href="/fonts/proxima-nova-semibold.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/fonts/proxima-nova-regular-latin-ext-a.woff2"
+          href="/fonts/proxima-nova-bold.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/fonts/proxima-nova-regular-latin.woff2"
+          href="/fonts/torus-regular.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/fonts/torus-bold-latin.woff2"
+          href="/fonts/torus-medium.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/torus-semibold.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/torus-bold.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
