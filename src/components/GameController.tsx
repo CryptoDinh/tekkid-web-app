@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { MdThumbUp, MdThumbDown, MdFlag, MdFullscreen, MdFullscreenExit,MdArrowBackIosNew as BackArrow } from 'react-icons/md';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { useFullscreen } from '@/hooks/useFullscreen';
 
 interface GameControllerProps {
   name: string;
@@ -28,6 +29,10 @@ export default function GameController({
 }: GameControllerProps) {
   const isMobile = useIsMobile();
   const [isLandscape, setIsLandscape] = useState(false);
+  const { isFullscreen: isNativeFullscreen } = useFullscreen();
+  
+  // Determine if we're in any kind of fullscreen mode
+  const isInFullscreenMode = isFullscreen || isNativeFullscreen;
 
   useEffect(() => {
     const checkOrientation = () => {
@@ -39,7 +44,20 @@ export default function GameController({
     return () => window.removeEventListener('resize', checkOrientation);
   }, []);
 
-  if (isMobile && isFullscreen && isLandscape) {
+  // Add body class when in fullscreen mode
+  useEffect(() => {
+    if (isInFullscreenMode) {
+      document.body.classList.add('fullscreen-mode');
+    } else {
+      document.body.classList.remove('fullscreen-mode');
+    }
+    
+    return () => {
+      document.body.classList.remove('fullscreen-mode');
+    };
+  }, [isInFullscreenMode]);
+
+  if (isMobile && isInFullscreenMode && isLandscape) {
     return (
       <button
         onClick={onFullscreen}
@@ -81,7 +99,7 @@ export default function GameController({
         </div>
       </div>
       <div className="game-actions">
-        {(!isMobile || !isFullscreen) && (
+        {(!isMobile || !isInFullscreenMode) && (
           <>
             <button onClick={onLike} aria-label="Like">
               <MdThumbUp size={24} />
@@ -94,8 +112,8 @@ export default function GameController({
             </button>
           </>
         )}
-        <button onClick={onFullscreen} aria-label={isFullscreen ? "Exit fullscreen" : "Fullscreen"}>
-          {isFullscreen ? <MdFullscreenExit size={24} /> : <MdFullscreen size={24} />}
+        <button onClick={onFullscreen} aria-label={isInFullscreenMode ? "Exit fullscreen" : "Fullscreen"}>
+          {isInFullscreenMode ? <MdFullscreenExit size={24} /> : <MdFullscreen size={24} />}
         </button>
       </div>
     </div>

@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import GamePlayer from './GamePlayer';
 import GameController from './GameController';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { useFullscreen } from '@/hooks/useFullscreen';
 import Image from 'next/image';
 
 interface GameContainerProps {
@@ -20,11 +21,40 @@ export default function GameContainer({ game, onEnterFullscreen }: GameContainer
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
+  const { isFullscreen, isSupported, requestFullscreen, exitFullscreen } = useFullscreen();
+  const [isCustomFullscreen, setIsCustomFullscreen] = useState(false);
+
+  // Add body class when in fullscreen mode
+  useEffect(() => {
+    if (isFullscreen || isCustomFullscreen) {
+      document.body.classList.add('fullscreen-mode');
+    } else {
+      document.body.classList.remove('fullscreen-mode');
+    }
+    
+    return () => {
+      document.body.classList.remove('fullscreen-mode');
+    };
+  }, [isFullscreen, isCustomFullscreen]);
 
   const handleFullscreen = () => {
-    // Call the onEnterFullscreen callback if provided
-    if (onEnterFullscreen) {
-      onEnterFullscreen(game);
+    if (isSupported) {
+      // Use native fullscreen API
+      requestFullscreen(containerRef);
+    } else {
+      // Use custom fullscreen implementation
+      setIsCustomFullscreen(true);
+      if (onEnterFullscreen) {
+        onEnterFullscreen(game);
+      }
+    }
+  };
+
+  const handleExitFullscreen = () => {
+    if (isSupported) {
+      exitFullscreen();
+    } else {
+      setIsCustomFullscreen(false);
     }
   };
 
@@ -33,7 +63,7 @@ export default function GameContainer({ game, onEnterFullscreen }: GameContainer
     return null;
   }
 
-  if (isMobile) {
+  if (isMobile && !isFullscreen) {
     return (
       <div ref={containerRef} className="game-container">
         <div className="play-game-tile">
@@ -70,8 +100,8 @@ export default function GameContainer({ game, onEnterFullscreen }: GameContainer
         onLike={() => console.log('Like clicked')}
         onUnlike={() => console.log('Unlike clicked')}
         onFlag={() => console.log('Flag clicked')}
-        onFullscreen={handleFullscreen}
-        isFullscreen={false}
+        onFullscreen={isFullscreen ? handleExitFullscreen : handleFullscreen}
+        isFullscreen={isCustomFullscreen || isFullscreen}
       />
     </div>
   );

@@ -1,5 +1,5 @@
 'use client';
-import React, { use, useState } from 'react';
+import React, { use, useState, useEffect } from 'react';
 import GameGrid from '@/components/GameGrid';
 import CategoryGrid from '@/components/CategoryGrid';
 import AboutSection from '@/components/AboutSection';
@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import { NavItem } from '@/components/NavItem';
 import GameContainerFullscreen from '@/components/GameContainerFullscreen';
 import DebugOverlay from '@/components/DebugOverlay';
+import { useFullscreen } from '@/hooks/useFullscreen';
 
 export default function GamePage({
     params
@@ -16,6 +17,7 @@ export default function GamePage({
     const { slug } = use(params);
     const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
     const [fullscreenGame, setFullscreenGame] = useState<any>(null);
+    const { isSupported } = useFullscreen();
 
     // Handle entering fullscreen mode
     const handleEnterFullscreen = (game: any) => {
@@ -31,11 +33,10 @@ export default function GamePage({
 
     return (
         <main>
-            <DebugOverlay />
-            {isFullscreen && fullscreenGame && (
+            {isFullscreen && fullscreenGame && !isSupported && (
                 <GameContainerFullscreen
                     game={fullscreenGame}
-                    onExitFullscreen={handleExitFullscreen}
+                    onExit={handleExitFullscreen}
                 />
             )}
             <NavItem />
@@ -46,10 +47,6 @@ export default function GamePage({
             <CategoryGrid />
             <AboutSection />
             <Footer />
-
-
-
-
         </main>
     );
 }

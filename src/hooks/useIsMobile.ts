@@ -25,3 +25,45 @@ export const useIsMobile = () => {
   // Return false during SSR and initial render
   return isMobile ?? false;
 };
+
+export const useIsIOS = () => {
+  const [isIOS, setIsIOS] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkIsIOS = () => {
+      const userAgent = navigator.userAgent;
+      const ios = Boolean(
+        userAgent.match(/iPhone|iPad|iPod/i)
+      );
+      setIsIOS(ios);
+    };
+
+    checkIsIOS();
+    window.addEventListener('resize', checkIsIOS);
+
+    return () => window.removeEventListener('resize', checkIsIOS);
+  }, []);
+
+  return isIOS ?? false;
+};
+
+export const useIsAndroid = () => {
+  const [isAndroid, setIsAndroid] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkIsAndroid = () => {
+      const userAgent = navigator.userAgent;
+      const android = Boolean(
+        userAgent.match(/Android/i)
+      );
+      setIsAndroid(android);
+    };
+
+    checkIsAndroid();
+    window.addEventListener('resize', checkIsAndroid);
+
+    return () => window.removeEventListener('resize', checkIsAndroid);
+  }, []);
+
+  return isAndroid ?? false;
+};
