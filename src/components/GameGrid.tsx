@@ -150,8 +150,8 @@ export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullsc
                     alt={game.name}
                     className="game-image"
                     unoptimized
-                    layout="fill"
-                    objectFit="cover"
+                    fill
+                    style={{ objectFit: 'cover' }}
                     priority={index < 6}
                   />
                   {game.video_url && (

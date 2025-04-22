@@ -1,12 +1,11 @@
 'use client';
-import React, { use, useState, useEffect } from 'react';
+import React, { use, useState } from 'react';
 import GameGrid from '@/components/GameGrid';
 import CategoryGrid from '@/components/CategoryGrid';
 import AboutGameSection from '@/components/AboutGameSection';
 import Footer from '@/components/Footer';
 import { NavItem } from '@/components/NavItem';
 import GameContainerFullscreen from '@/components/GameContainerFullscreen';
-import DebugOverlay from '@/components/DebugOverlay';
 import { useFullscreen } from '@/hooks/useFullscreen';
 
 export default function GamePage({

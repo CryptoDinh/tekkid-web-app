@@ -70,8 +70,8 @@ export default function GameContainer({ game, onEnterFullscreen }: GameContainer
           <Image
             src={game.image}
             alt={game.name}
-            layout="fill"
-            objectFit="cover"
+            fill
+            style={{ objectFit: 'cover' }}
             className="game-thumbnail"
           />
           <div className="play-button-overlay" onClick={handleFullscreen}>

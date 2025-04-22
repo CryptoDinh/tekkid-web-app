@@ -17,10 +17,48 @@ export default function DebugOverlay() {
       height: 0,
       scrollWidth: 0,
       scrollHeight: 0,
+      clientWidth: 0,
+      clientHeight: 0,
+      offsetWidth: 0,
+      offsetHeight: 0,
+      padding: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+      },
+      margin: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+      },
+      position: '',
+      overflow: '',
     },
     main: {
       width: 0,
       height: 0,
+      scrollWidth: 0,
+      scrollHeight: 0,
+      clientWidth: 0,
+      clientHeight: 0,
+      offsetWidth: 0,
+      offsetHeight: 0,
+      padding: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+      },
+      margin: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+      },
+      position: '',
+      overflow: '',
     },
     gameContainerFullscreen: {
       width: 0,
@@ -33,6 +71,11 @@ export default function DebugOverlay() {
     const updateDimensions = () => {
       const gameContainerFullscreen = document.querySelector('.game-container-fullscreen');
       const mainElement = document.querySelector('main');
+      const bodyElement = document.body;
+      
+      // Get computed styles for body and main
+      const bodyStyle = window.getComputedStyle(bodyElement);
+      const mainStyle = mainElement ? window.getComputedStyle(mainElement) : null;
       
       setDimensions({
         window: {
@@ -44,14 +87,65 @@ export default function DebugOverlay() {
           height: document.documentElement.clientHeight,
         },
         body: {
-          width: document.body.clientWidth,
-          height: document.body.clientHeight,
-          scrollWidth: document.body.scrollWidth,
-          scrollHeight: document.body.scrollHeight,
+          width: bodyElement.clientWidth,
+          height: bodyElement.clientHeight,
+          scrollWidth: bodyElement.scrollWidth,
+          scrollHeight: bodyElement.scrollHeight,
+          clientWidth: bodyElement.clientWidth,
+          clientHeight: bodyElement.clientHeight,
+          offsetWidth: bodyElement.offsetWidth,
+          offsetHeight: bodyElement.offsetHeight,
+          padding: {
+            top: parseInt(bodyStyle.paddingTop || '0'),
+            right: parseInt(bodyStyle.paddingRight || '0'),
+            bottom: parseInt(bodyStyle.paddingBottom || '0'),
+            left: parseInt(bodyStyle.paddingLeft || '0'),
+          },
+          margin: {
+            top: parseInt(bodyStyle.marginTop || '0'),
+            right: parseInt(bodyStyle.marginRight || '0'),
+            bottom: parseInt(bodyStyle.marginBottom || '0'),
+            left: parseInt(bodyStyle.marginLeft || '0'),
+          },
+          position: bodyStyle.position || '',
+          overflow: bodyStyle.overflow || '',
         },
-        main: {
-          width: mainElement?.clientWidth || 0,
-          height: mainElement?.clientHeight || 0,
+        main: mainElement ? {
+          width: mainElement.clientWidth,
+          height: mainElement.clientHeight,
+          scrollWidth: mainElement.scrollWidth,
+          scrollHeight: mainElement.scrollHeight,
+          clientWidth: mainElement.clientWidth,
+          clientHeight: mainElement.clientHeight,
+          offsetWidth: mainElement.offsetWidth,
+          offsetHeight: mainElement.offsetHeight,
+          padding: {
+            top: parseInt(mainStyle?.paddingTop || '0'),
+            right: parseInt(mainStyle?.paddingRight || '0'),
+            bottom: parseInt(mainStyle?.paddingBottom || '0'),
+            left: parseInt(mainStyle?.paddingLeft || '0'),
+          },
+          margin: {
+            top: parseInt(mainStyle?.marginTop || '0'),
+            right: parseInt(mainStyle?.marginRight || '0'),
+            bottom: parseInt(mainStyle?.marginBottom || '0'),
+            left: parseInt(mainStyle?.marginLeft || '0'),
+          },
+          position: mainStyle?.position || '',
+          overflow: mainStyle?.overflow || '',
+        } : {
+          width: 0,
+          height: 0,
+          scrollWidth: 0,
+          scrollHeight: 0,
+          clientWidth: 0,
+          clientHeight: 0,
+          offsetWidth: 0,
+          offsetHeight: 0,
+          padding: { top: 0, right: 0, bottom: 0, left: 0 },
+          margin: { top: 0, right: 0, bottom: 0, left: 0 },
+          position: '',
+          overflow: '',
         },
         gameContainerFullscreen: {
           width: gameContainerFullscreen?.clientWidth || 0,
@@ -117,11 +211,24 @@ export default function DebugOverlay() {
         <div style={{ color: '#94a3b8', marginBottom: '1px' }}>Body:</div>
         <div>W: {dimensions.body.width}px × H: {dimensions.body.height}px</div>
         <div>Scroll: W: {dimensions.body.scrollWidth}px × H: {dimensions.body.scrollHeight}px</div>
+        <div>Client: W: {dimensions.body.clientWidth}px × H: {dimensions.body.clientHeight}px</div>
+        <div>Offset: W: {dimensions.body.offsetWidth}px × H: {dimensions.body.offsetHeight}px</div>
+        <div>Position: {dimensions.body.position}</div>
+        <div>Overflow: {dimensions.body.overflow}</div>
+        <div>Padding: {dimensions.body.padding.top}px {dimensions.body.padding.right}px {dimensions.body.padding.bottom}px {dimensions.body.padding.left}px</div>
+        <div>Margin: {dimensions.body.margin.top}px {dimensions.body.margin.right}px {dimensions.body.margin.bottom}px {dimensions.body.margin.left}px</div>
       </div>
 
       <div style={{ marginBottom: '3px' }}>
         <div style={{ color: '#94a3b8', marginBottom: '1px' }}>Main:</div>
         <div>W: {dimensions.main.width}px × H: {dimensions.main.height}px</div>
+        <div>Scroll: W: {dimensions.main.scrollWidth}px × H: {dimensions.main.scrollHeight}px</div>
+        <div>Client: W: {dimensions.main.clientWidth}px × H: {dimensions.main.clientHeight}px</div>
+        <div>Offset: W: {dimensions.main.offsetWidth}px × H: {dimensions.main.offsetHeight}px</div>
+        <div>Position: {dimensions.main.position}</div>
+        <div>Overflow: {dimensions.main.overflow}</div>
+        <div>Padding: {dimensions.main.padding.top}px {dimensions.main.padding.right}px {dimensions.main.padding.bottom}px {dimensions.main.padding.left}px</div>
+        <div>Margin: {dimensions.main.margin.top}px {dimensions.main.margin.right}px {dimensions.main.margin.bottom}px {dimensions.main.margin.left}px</div>
       </div>
 
       <div>

@@ -2,17 +2,17 @@
   "games": [
     {
       "game_id": 0,
-      "slug": "super-liquid-soccer",
-      "name": "Super Liquid Soccer",
-      "image": "https://img.poki-cdn.com/cdn-cgi/image/quality=78,width=408,height=408,fit=cover,f=auto/6ed4fe5c596152a83c39b738e8ac379d.png",
+      "slug": "mahjong-tour",
+      "name": "Mahjong Tour",
+      "image": "/images/games/Mahjong-Tour/512x512.jpg",
       "plays": 3,
       "rating": "0",
-      "description": "Super Liquid Soccer is a soccer game made by Punyrobot where you choose to play as your favourite country in this floppy football game! You have lots of different ways to play from chip passes to through balls so find your playstyle and see if you can become World Champion! You can also play penalties so get your boots on and get ready to take and save some! Can you handle the pressure and become a world champion?",
+      "description": "Mahjong Tour game is a cool mahjong game with colorful graphics, challenging levels and appealing themes. Match tiles of the same type and watch them flutter away. Once you clear the screen, the level is finished and you can move on to the next.",
       "game_type": "other",
       "mobile": 0,
-      "video_url": "/videos/super-liquid-soccer/thumbnail.1x1.h264.mp4",
-      "gameLink": "https://html5.gamemonetize.com/stp68cw05n283o49a9n8qym64knqpbmz/",
-      "developer": "coolcrazygames",
+      "video_url": null,
+      "gameLink": "https://html5.gamedistribution.com/ca1c8ab2b0144819b3a30c2f3ae77ab0/?gd_sdk_referrer_url=https://gamedistribution.com/games/mahjong-tour/",
+      "developer": "Inlogic Software",
       "categories": [
         "board",
         "puzzle"
@@ -189,17 +189,17 @@
     },
     {
       "game_id": 10,
-      "slug": "timberland-arrange-puzzle-game",
-      "name": "Timberland Arrange Puzzle Game",
-      "image": "https://img.gamemonetize.com/xspq2s1j6u6sf4o5v1gy5dnhqcs78d3n/512x384.jpg",
+      "slug": "sprunki-gets-surgery",
+      "name": "SPRUNKI GETS SURGERY",
+      "image": "/images/games/sprunki-gets-surgery/512x512.jpg",
       "plays": 3,
       "rating": "0",
-      "description": "The puzzle game is original for the development of the mind. An educational game for children and adults. A logical game that will help you relax and develop logical thinking. Arrange the animals and color them! A deceptively simple and addictive puzzle game, a refreshing reinterpretation of classic Tag and Sudoku. Assemble a logical puzzle by finding intersections between different types of hints. Enjoy colorful hand-drawn graphics, fascinating sounds of nature and cheerful cries of animals! Whats in the game: &amp;bull; 120+ levels &amp;bull; Various mechanics, unexpected combinations &amp;bull; Soothing sounds of nature, vivid effects &amp;bull; No time limit",
+      "description": "SPRUNKI GETS SURGERY ?? OREN, a genius (but reckless) surgeon, must save PINKI after a brutal facial injury—without anesthesia! As more SPRUNKIS like TUNNER, shot in the head, flood the ER, OREN races against time. But lurking in the shadows is BLACK, ready to turn OREN’s mission into a nightmare. Will OREN save them all, or will BLACK end it in tragedy?",
       "game_type": "html5",
       "featured": 0,
       "mobile": 0,
       "video_url": null,
-      "gameLink": "https://html5.gamemonetize.com/xspq2s1j6u6sf4o5v1gy5dnhqcs78d3n/",
+      "gameLink": "https://html5.gamedistribution.com/d0e4bfcfc5c4410fa1f5ed026b3d32de/?gd_sdk_referrer_url=https://gamedistribution.com/games/sprunki-gets-surgery/",
       "categories": [
         "puzzle"
       ]

@@ -1,0 +1,13 @@
+{
+  "name": "tekkid-web-app-scripts",
+  "version": "1.0.0",
+  "description": "Scripts for TekKid Web App",
+  "main": "crawl-games.js",
+  "scripts": {
+    "crawl": "node crawl-games.js",
+    "crawl-details": "node crawl-game-details.js"
+  },
+  "dependencies": {
+    "puppeteer": "^21.0.0"
+  }
+} 
