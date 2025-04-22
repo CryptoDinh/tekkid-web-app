@@ -2,7 +2,7 @@
 import React, { use, useState, useEffect } from 'react';
 import GameGrid from '@/components/GameGrid';
 import CategoryGrid from '@/components/CategoryGrid';
-import AboutSection from '@/components/AboutSection';
+import AboutGameSection from '@/components/AboutGameSection';
 import Footer from '@/components/Footer';
 import { NavItem } from '@/components/NavItem';
 import GameContainerFullscreen from '@/components/GameContainerFullscreen';
@@ -45,7 +45,7 @@ export default function GamePage({
                 onEnterFullscreen={handleEnterFullscreen}
             />
             <CategoryGrid />
-            <AboutSection />
+            <AboutGameSection gameSlug={slug} />
             <Footer />
         </main>
     );
