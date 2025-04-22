@@ -22,9 +22,10 @@ interface GamesData {
 interface GameGridProps {
   selectedGameSlug?: string;
   categorySlug?: string;
+  onEnterFullscreen?: (game: Game) => void;
 }
 
-export default function GameGrid({ selectedGameSlug, categorySlug }: GameGridProps) {
+export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullscreen }: GameGridProps) {
   const [games, setGames] = useState<Game[]>([]);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
@@ -108,7 +109,7 @@ export default function GameGrid({ selectedGameSlug, categorySlug }: GameGridPro
     <>
       <div className="container" id="gameGrid">
         <PlaceholderItem />
-        {selectedGame && <GameContainer game={selectedGame} />}
+        {selectedGame && <GameContainer game={selectedGame} onEnterFullscreen={onEnterFullscreen} />}
         {games.map((game, index) => {
           if (game.slug !== selectedGame?.slug)
             return (

@@ -8,110 +8,126 @@ export default function DebugOverlay() {
       width: 0,
       height: 0,
     },
-    screen: {
-      width: 0,
-      height: 0,
-    },
     viewport: {
       width: 0,
       height: 0,
     },
-    gameGrid: { 
-      width: 0, 
-      height: 0 
-    },
-    gameContainer: {
+    body: {
       width: 0,
       height: 0,
-      isFullscreen: false
+      scrollWidth: 0,
+      scrollHeight: 0,
+    },
+    main: {
+      width: 0,
+      height: 0,
+    },
+    gameContainerFullscreen: {
+      width: 0,
+      height: 0,
+      isVisible: false
     }
   });
 
   useEffect(() => {
     const updateDimensions = () => {
-      const gameGrid = document.getElementById('gameGrid');
-      const gameContainer = document.querySelector('.game-container');
+      const gameContainerFullscreen = document.querySelector('.game-container-fullscreen');
+      const mainElement = document.querySelector('main');
       
       setDimensions({
         window: {
           width: window.innerWidth,
           height: window.innerHeight,
         },
-        screen: {
-          width: window.screen.width,
-          height: window.screen.height,
-        },
         viewport: {
           width: document.documentElement.clientWidth,
           height: document.documentElement.clientHeight,
         },
-        gameGrid: {
-          width: gameGrid?.offsetWidth || 0,
-          height: gameGrid?.offsetHeight || 0,
+        body: {
+          width: document.body.clientWidth,
+          height: document.body.clientHeight,
+          scrollWidth: document.body.scrollWidth,
+          scrollHeight: document.body.scrollHeight,
         },
-        gameContainer: {
-          width: gameContainer?.clientWidth || 0,
-          height: gameContainer?.clientHeight || 0,
-          isFullscreen: gameContainer?.classList.contains('fullscreen') || false
+        main: {
+          width: mainElement?.clientWidth || 0,
+          height: mainElement?.clientHeight || 0,
+        },
+        gameContainerFullscreen: {
+          width: gameContainerFullscreen?.clientWidth || 0,
+          height: gameContainerFullscreen?.clientHeight || 0,
+          isVisible: !!gameContainerFullscreen
         }
       });
     };
 
     updateDimensions();
 
+    // Update dimensions on resize and orientation change
     window.addEventListener('resize', updateDimensions);
     window.addEventListener('orientationchange', () => {
+      // Add a small delay to ensure the browser has updated the dimensions
       setTimeout(updateDimensions, 100);
     });
+
+    // Also update when the address bar shows/hides on mobile
+    window.addEventListener('scroll', updateDimensions);
+    
+    // Set up an interval to check dimensions periodically
+    const intervalId = setInterval(updateDimensions, 500);
 
     return () => {
       window.removeEventListener('resize', updateDimensions);
       window.removeEventListener('orientationchange', updateDimensions);
+      window.removeEventListener('scroll', updateDimensions);
+      clearInterval(intervalId);
     };
   }, []);
 
   return (
     <div style={{
       position: 'fixed',
-      top: 16,
-      right: 16,
-      maxWidth: '300px',
+      top: 8,
+      right: 8,
+      maxWidth: '250px',
       background: 'rgba(0,0,0,0.8)',
       color: '#fff',
       fontFamily: 'monospace',
-      fontSize: '12px',
-      padding: '12px',
-      borderRadius: '8px',
-      zIndex: 9999,
+      fontSize: '10px',
+      padding: '6px',
+      borderRadius: '4px',
+      zIndex: 100000,
       backdropFilter: 'blur(4px)',
       boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+      lineHeight: '1.2',
     }}>
-      <div style={{ marginBottom: '8px', fontWeight: 'bold', color: '#4ade80' }}>Debug Info</div>
+      <div style={{ marginBottom: '4px', fontWeight: 'bold', color: '#4ade80', fontSize: '11px' }}>Debug Info</div>
       
-      <div style={{ marginBottom: '8px' }}>
-        <div style={{ color: '#94a3b8', marginBottom: '4px' }}>Window:</div>
+      <div style={{ marginBottom: '3px' }}>
+        <div style={{ color: '#94a3b8', marginBottom: '1px' }}>Window:</div>
         <div>W: {dimensions.window.width}px × H: {dimensions.window.height}px</div>
       </div>
 
-      <div style={{ marginBottom: '8px' }}>
-        <div style={{ color: '#94a3b8', marginBottom: '4px' }}>Viewport:</div>
+      <div style={{ marginBottom: '3px' }}>
+        <div style={{ color: '#94a3b8', marginBottom: '1px' }}>Viewport:</div>
         <div>W: {dimensions.viewport.width}px × H: {dimensions.viewport.height}px</div>
       </div>
 
-      <div style={{ marginBottom: '8px' }}>
-        <div style={{ color: '#94a3b8', marginBottom: '4px' }}>Screen:</div>
-        <div>W: {dimensions.screen.width}px × H: {dimensions.screen.height}px</div>
+      <div style={{ marginBottom: '3px' }}>
+        <div style={{ color: '#94a3b8', marginBottom: '1px' }}>Body:</div>
+        <div>W: {dimensions.body.width}px × H: {dimensions.body.height}px</div>
+        <div>Scroll: W: {dimensions.body.scrollWidth}px × H: {dimensions.body.scrollHeight}px</div>
       </div>
 
-      <div style={{ marginBottom: '8px' }}>
-        <div style={{ color: '#94a3b8', marginBottom: '4px' }}>Game Grid:</div>
-        <div>W: {dimensions.gameGrid.width}px × H: {dimensions.gameGrid.height}px</div>
+      <div style={{ marginBottom: '3px' }}>
+        <div style={{ color: '#94a3b8', marginBottom: '1px' }}>Main:</div>
+        <div>W: {dimensions.main.width}px × H: {dimensions.main.height}px</div>
       </div>
 
       <div>
-        <div style={{ color: '#94a3b8', marginBottom: '4px' }}>Game Container:</div>
-        <div>W: {dimensions.gameContainer.width}px × H: {dimensions.gameContainer.height}px</div>
-        <div>Fullscreen: {dimensions.gameContainer.isFullscreen ? 'Yes' : 'No'}</div>
+        <div style={{ color: '#94a3b8', marginBottom: '1px' }}>GameContainerFullscreen:</div>
+        <div>W: {dimensions.gameContainerFullscreen.width}px × H: {dimensions.gameContainerFullscreen.height}px</div>
+        <div>Visible: {dimensions.gameContainerFullscreen.isVisible ? 'Yes' : 'No'}</div>
       </div>
     </div>
   );

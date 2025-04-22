@@ -1,55 +1,10 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useRef } from 'react';
 import GamePlayer from './GamePlayer';
 import GameController from './GameController';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import Image from 'next/image';
-
-interface NavigatorUserAgentData {
-  getHighEntropyValues(hints: string[]): Promise<{ platform: string }>;
-}
-
-const useIsIOS = () => {
-  const [isIOS, setIsIOS] = useState<boolean>(false);
-
-  useEffect(() => {
-    const checkIOS = () => {
-      if ("userAgentData" in navigator && navigator.userAgentData) {
-        (navigator.userAgentData as NavigatorUserAgentData).getHighEntropyValues(["platform"])
-          .then((data: any) => {
-            setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent) || 
-              (data.platform === "MacIntel" && navigator.maxTouchPoints > 1));
-          });
-      } else {
-        setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent));
-      }
-    };
-    
-    checkIOS();
-  }, []);
-
-  return isIOS;
-};
-
-// Add a hook to detect Opera browser
-const useIsOpera = () => {
-  const [isOpera, setIsOpera] = useState<boolean>(false);
-
-  useEffect(() => {
-    const checkOpera = () => {
-      // Check for Opera browser
-      const isOperaBrowser = /OPR/.test(navigator.userAgent) || 
-                            /Opera/.test(navigator.userAgent) ||
-                            (navigator.userAgent.includes('Chrome') && navigator.userAgent.includes('OPR'));
-      setIsOpera(isOperaBrowser);
-    };
-    
-    checkOpera();
-  }, []);
-
-  return isOpera;
-};
 
 interface GameContainerProps {
   game: {
@@ -58,181 +13,29 @@ interface GameContainerProps {
     gameLink: string;
     image: string;
   };
+  onEnterFullscreen?: (game: any) => void;
 }
 
-export default function GameContainer({ game }: GameContainerProps) {
+export default function GameContainer({ game, onEnterFullscreen }: GameContainerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
-  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-  const isIOSDeviceValue = useIsIOS();
-  const isOperaBrowser = useIsOpera();
-  
-  // Create a stable reference for isIOSDevice
-  const isIOSDevice = useMemo(() => isIOSDeviceValue, [isIOSDeviceValue]);
-  
-  // Add a class to the body when in fullscreen mode on Opera iOS
-  useEffect(() => {
-    if (isFullscreen && isIOSDevice && isOperaBrowser) {
-      document.body.classList.add('opera-ios-fullscreen');
-    } else {
-      document.body.classList.remove('opera-ios-fullscreen');
-    }
-    
-    return () => {
-      document.body.classList.remove('opera-ios-fullscreen');
-    };
-  }, [isFullscreen, isIOSDevice, isOperaBrowser]);
 
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      if (!document.fullscreenElement) {
-        setIsFullscreen(false);
-        document.body.classList.remove('game-fullscreen');
-      }
-    };
-
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      document.body.classList.remove('game-fullscreen');
-    };
-  }, []);
-
-  const handleFullscreen = async () => {
-    if (isFullscreen) {
-      exitFullscreenAndBack();
-    } else {
-      if (containerRef.current) {
-        try {
-          if (isIOSDevice) {
-            // For iOS, just use CSS fullscreen
-            setIsFullscreen(true);
-            document.body.classList.add('game-fullscreen');
-            // Ensure CategoryGrid is hidden
-            const categoryGrid = document.getElementById('categoryGrid');
-            if (categoryGrid) {
-              categoryGrid.style.display = 'none';
-            }
-          } else {
-            // For other devices, use Fullscreen API
-            await containerRef.current.requestFullscreen();
-            setIsFullscreen(true);
-            document.body.classList.add('game-fullscreen');
-            // Ensure CategoryGrid is hidden
-            const categoryGrid = document.getElementById('categoryGrid');
-            if (categoryGrid) {
-              categoryGrid.style.display = 'none';
-            }
-          }
-        } catch (err) {
-          console.log("Fullscreen request failed:", err);
-          // Fallback to CSS fullscreen
-          setIsFullscreen(true);
-          document.body.classList.add('game-fullscreen');
-          // Ensure CategoryGrid is hidden
-          const categoryGrid = document.getElementById('categoryGrid');
-          if (categoryGrid) {
-            categoryGrid.style.display = 'none';
-          }
-        }
-      }
+  const handleFullscreen = () => {
+    // Call the onEnterFullscreen callback if provided
+    if (onEnterFullscreen) {
+      onEnterFullscreen(game);
     }
   };
-
-  const exitFullscreenAndBack = () => {
-    if (isIOSDevice) {
-      setIsFullscreen(false);
-      document.body.classList.remove('game-fullscreen');
-      // Show CategoryGrid again
-      const categoryGrid = document.getElementById('categoryGrid');
-      if (categoryGrid) {
-        categoryGrid.style.display = '';
-      }
-    } else if (document.fullscreenElement) {
-      document.exitFullscreen();
-    }
-    setIsFullscreen(false);
-    document.body.classList.remove('game-fullscreen');
-    // Show CategoryGrid again
-    const categoryGrid = document.getElementById('categoryGrid');
-    if (categoryGrid) {
-      categoryGrid.style.display = '';
-    }
-  };
-
-  // Add orientation change handler for iOS
-  useEffect(() => {
-    // Function to handle orientation changes without exiting fullscreen
-    const handleOrientationChangeOnly = () => {
-      // This function only maintains the body class when in fullscreen
-      // without changing the fullscreen state
-      if (isFullscreen) {
-        document.body.classList.add('game-fullscreen');
-        // Ensure CategoryGrid is hidden
-        const categoryGrid = document.getElementById('categoryGrid');
-        if (categoryGrid) {
-          categoryGrid.style.display = 'none';
-        }
-      } else {
-        document.body.classList.remove('game-fullscreen');
-        // Show CategoryGrid again
-        const categoryGrid = document.getElementById('categoryGrid');
-        if (categoryGrid) {
-          categoryGrid.style.display = '';
-        }
-      }
-    };
-
-    const handleOrientationChange = () => {
-      // Use the new function that doesn't exit fullscreen
-      handleOrientationChangeOnly();
-    };
-
-    // Add resize handler to maintain fullscreen state
-    const handleResize = () => {
-      if (isFullscreen) {
-        document.body.classList.add('game-fullscreen');
-      }
-    };
-
-    // For iOS, we need to handle orientation changes differently
-    if (isIOSDevice) {
-      // iOS specific orientation change handling
-      const handleIOSOrientationChange = () => {
-        // Just ensure the body class is maintained
-        if (isFullscreen) {
-          document.body.classList.add('game-fullscreen');
-        }
-      };
-
-      window.addEventListener('orientationchange', handleIOSOrientationChange);
-      window.addEventListener('resize', handleIOSOrientationChange);
-      
-      return () => {
-        window.removeEventListener('orientationchange', handleIOSOrientationChange);
-        window.removeEventListener('resize', handleIOSOrientationChange);
-      };
-    } else {
-      // For non-iOS devices
-      window.addEventListener('orientationchange', handleOrientationChange);
-      window.addEventListener('resize', handleResize);
-      
-      return () => {
-        window.removeEventListener('orientationchange', handleOrientationChange);
-        window.removeEventListener('resize', handleResize);
-      };
-    }
-  }, [isFullscreen, isIOSDevice]);
 
   // Don't render anything until we know the device type
   if (typeof window === 'undefined') {
     return null;
   }
 
-  if (isMobile && !isFullscreen) {
+  if (isMobile) {
     return (
-      <div ref={containerRef} className={`game-container ${isFullscreen ? 'fullscreen' : ''}`}>
+      <div ref={containerRef} className="game-container">
         <div className="play-game-tile">
           <Image
             src={game.image}
@@ -258,7 +61,7 @@ export default function GameContainer({ game }: GameContainerProps) {
   }
 
   return (
-    <div ref={containerRef} className={`game-container ${isFullscreen ? 'fullscreen' : ''}`}>
+    <div ref={containerRef} className="game-container">
       <GamePlayer gameUrl={game.gameLink} iframeRef={iframeRef} />
       <GameController
         name={game.name}
@@ -268,7 +71,7 @@ export default function GameContainer({ game }: GameContainerProps) {
         onUnlike={() => console.log('Unlike clicked')}
         onFlag={() => console.log('Flag clicked')}
         onFullscreen={handleFullscreen}
-        isFullscreen={isFullscreen}
+        isFullscreen={false}
       />
     </div>
   );
