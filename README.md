@@ -30,6 +30,19 @@ pnpm install
 bun install
 ```
 
+### Database Setup
+
+This project uses a Neon PostgreSQL database. To set up the database connection:
+
+1. Create a `.env.local` file in the root directory
+2. Add your Neon database connection string:
+
+```
+DATABASE_URL=postgres://username:password@your-neon-host:5432/database?sslmode=require
+```
+
+Replace `username`, `password`, `your-neon-host`, and `database` with your actual Neon database credentials.
+
 Then run the development server (using the package manager of your choice):
 
 ```bash

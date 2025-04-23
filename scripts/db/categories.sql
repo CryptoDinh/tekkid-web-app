@@ -1,0 +1,10 @@
+INSERT INTO "categories" ("id", "slug", "name", "image", "description", "featured") VALUES (1, 'action', 'Action', '/images/categories/action.jpg', 'Fast-paced games with intense gameplay', 1);
+INSERT INTO "categories" ("id", "slug", "name", "image", "description", "featured") VALUES (2, 'adventure', 'Adventure', '/images/categories/adventure.jpg', 'Explore new worlds and solve puzzles', 0);
+INSERT INTO "categories" ("id", "slug", "name", "image", "description", "featured") VALUES (3, 'puzzle', 'Puzzle', '/images/categories/puzzle.jpg', 'Challenge your mind with brain teasers', 1);
+INSERT INTO "categories" ("id", "slug", "name", "image", "description", "featured") VALUES (4, 'strategy', 'Strategy', '/images/categories/strategy.jpg', 'Plan, build, and conquer', 0);
+INSERT INTO "categories" ("id", "slug", "name", "image", "description", "featured") VALUES (5, 'sports', 'Sports', '/images/categories/sports.jpg', 'Compete in various athletic challenges', 1);
+INSERT INTO "categories" ("id", "slug", "name", "image", "description", "featured") VALUES (6, 'racing', 'Racing', '/images/categories/racing.jpg', 'Speed through tracks and outpace opponents', 0);
+INSERT INTO "categories" ("id", "slug", "name", "image", "description", "featured") VALUES (7, 'rpg', 'RPG', '/images/categories/rpg.jpg', 'Immerse yourself in rich storylines and character development', 1);
+INSERT INTO "categories" ("id", "slug", "name", "image", "description", "featured") VALUES (8, 'simulation', 'Simulation', '/images/categories/simulation.jpg', 'Experience realistic scenarios and management', 0);
+INSERT INTO "categories" ("id", "slug", "name", "image", "description", "featured") VALUES (9, 'arcade', 'Arcade', '/images/categorie/arcade.jpg', 'Classic game styles with simple, addictive gameplay', 1);
+INSERT INTO "categories" ("id", "slug", "name", "image", "description", "featured") VALUES (10, 'multiplayer', 'Multiplayer', '/images/categories/multiplayer.jpg', 'Compete or cooperate with other players online', 0);

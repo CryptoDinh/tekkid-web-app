@@ -6,15 +6,11 @@ import GameController from './GameController';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useFullscreen } from '@/hooks/useFullscreen';
 import Image from 'next/image';
+import { Game } from '@/types/game';
 
 interface GameContainerProps {
-  game: {
-    name: string;
-    developer: string;
-    gameLink: string;
-    image: string;
-  };
-  onEnterFullscreen?: (game: any) => void;
+  game: Game;
+  onEnterFullscreen?: (game: Game) => void;
 }
 
 export default function GameContainer({ game, onEnterFullscreen }: GameContainerProps) {
@@ -63,6 +59,9 @@ export default function GameContainer({ game, onEnterFullscreen }: GameContainer
     return null;
   }
 
+  // Use game_url if available, otherwise fall back to gameLink
+  const gameUrl = game.game_url;
+
   if (isMobile && !isFullscreen) {
     return (
       <div ref={containerRef} className="game-container">
@@ -84,7 +83,7 @@ export default function GameContainer({ game, onEnterFullscreen }: GameContainer
           </div>
         </div>
         <div style={{ display: 'none' }}>
-          <GamePlayer gameUrl={game.gameLink} iframeRef={iframeRef} />
+          <GamePlayer gameUrl={gameUrl} iframeRef={iframeRef} />
         </div>
       </div>
     );
@@ -92,10 +91,10 @@ export default function GameContainer({ game, onEnterFullscreen }: GameContainer
 
   return (
     <div ref={containerRef} className="game-container">
-      <GamePlayer gameUrl={game.gameLink} iframeRef={iframeRef} />
+      <GamePlayer gameUrl={gameUrl} iframeRef={iframeRef} />
       <GameController
         name={game.name}
-        developer={game.developer}
+        developer={game.developer || 'Unknown'}
         gameImage={game.image}
         onLike={() => console.log('Like clicked')}
         onUnlike={() => console.log('Unlike clicked')}

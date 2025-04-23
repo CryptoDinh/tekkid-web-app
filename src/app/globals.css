@@ -121,7 +121,7 @@ main {
 }
 
 
-.container {
+.grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, var(--cellSize, 94px));
   grid-template-rows: repeat(auto-fit, var(--cellSize, 94px));
@@ -135,10 +135,8 @@ main {
 
 #gameGrid {
   min-height: 100vh;
-  min-height: 100vh;
   position: relative;
   z-index: 1;
-  background: var(--bodyBackground);
 }
 
 #gameGrid a {
@@ -837,42 +835,3 @@ body:has(.game-container-fullscreen) {
   display: flex;
   flex-direction: column;
 }
-
-/* Hide CategoryGrid when in fullscreen mode */
-/* body:has(.game-container:fullscreen) #categoryGrid,
-body:has(.game-container:-webkit-full-screen) #categoryGrid,
-body:has(.game-container:-moz-full-screen) #categoryGrid,
-body:has(.game-container:-ms-fullscreen) #categoryGrid {
-  display: none !important;
-} */
-
-/* Hide NavItem when in fullscreen mode
-body:has(.game-container:fullscreen) .nav-item,
-body:has(.game-container:-webkit-full-screen) .nav-item,
-body:has(.game-container:-moz-full-screen) .nav-item,
-body:has(.game-container:-ms-fullscreen) .nav-item {
-  display: none !important;
-} */
-
-/* iOS specific fixes for landscape mode
-@supports (-webkit-touch-callout: none) {
-  .game-container-fullscreen,
-  .game-container:fullscreen,
-  .game-container:-webkit-full-screen {
-    height: -webkit-fill-available !important;
-    min-height: -webkit-fill-available !important;
-  }
-  
-  @media (orientation: landscape) {
-    .game-container-fullscreen,
-    .game-container:fullscreen,
-    .game-container:-webkit-full-screen {
-      width: 100% !important;
-      height: 100% !important;
-      min-width: 100vw !important;
-      min-height: 100vh !important;
-      max-width: 100vw !important;
-      max-height: 100vh !important;
-    }
-  }
-} */

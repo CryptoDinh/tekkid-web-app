@@ -1,27 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-
-interface Game {
-  game_id: number;
-  slug: string;
-  name: string;
-  description: string;
-  developer: string;
-  image: string;
-  game_type: string;
-  mobile: number;
-  video_url?: string;
-  gameLink: string;
-  categories?: string[];
-  featured?: number;
-  plays: number;
-  rating: string;
-}
-
-interface GamesData {
-  games: Game[];
-}
+import { Game } from '@/types/game';
 
 interface AboutGameSectionProps {
   gameSlug: string;
@@ -34,12 +14,13 @@ export default function AboutGameSection({ gameSlug }: AboutGameSectionProps) {
   useEffect(() => {
     const fetchGame = async () => {
       try {
-        const response = await fetch('/data/games.json');
-        const data = await response.json() as GamesData;
-        const gameData = data.games.find((g) => g.slug === gameSlug);
-        if (gameData) {
-          setGame(gameData);
+        setLoading(true);
+        const response = await fetch(`/api/games/${gameSlug}`);
+        if (!response.ok) {
+          throw new Error('Game not found');
         }
+        const gameData = await response.json() as Game;
+        setGame(gameData);
       } catch (error) {
         console.error('Error fetching game data:', error);
       } finally {
@@ -80,7 +61,13 @@ export default function AboutGameSection({ gameSlug }: AboutGameSectionProps) {
       <div className="about-title">About {game.name}</div>
       <div className="about-content">
         <div className="game-info">
-          <p><strong>Developer:</strong> {game.developer}</p>
+          <p><strong>Developer:</strong> {game.developer || 'Unknown'}</p>
+          {game.instructions && (
+            <div className="game-instructions">
+              <h3>How to Play</h3>
+              <p>{game.instructions}</p>
+            </div>
+          )}
         </div>
         <div className="game-description">
           {formattedDescription}

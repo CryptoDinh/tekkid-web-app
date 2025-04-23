@@ -5,20 +5,9 @@ import Link from 'next/link';
 import GameContainer from '@/components/GameContainer';
 import { PlaceholderItem } from './PlaceholderItem';
 import { useGridWidth } from '@/hooks/useGridWidth';
+import { Game, GamesData } from '@/types/game';
+import SkeletonLoader from './SkeletonLoader';
 
-export interface Game {
-  name: string;
-  image: string;
-  video_url?: string;
-  slug: string;
-  featured: number;
-  developer: string;
-  gameLink: string;
-  categories?: string[];
-}
-interface GamesData {
-  games: Game[];
-}
 interface GameGridProps {
   selectedGameSlug?: string;
   categorySlug?: string;
@@ -36,13 +25,16 @@ export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullsc
   useEffect(() => {
     const loadGames = async () => {
       try {
-        const response = await fetch('/data/games.json');
-        const data = await response.json() as GamesData;
-        let filteredGames = data.games;
+        setIsLoading(true);
+        let url = '/api/games';
 
         if (categorySlug) {
-          filteredGames = data.games.filter((game: Game) => game.categories?.includes(categorySlug as string));
+          url = `/api/categories/${categorySlug}/games`;
         }
+
+        const response = await fetch(url);
+        const data = await response.json() as GamesData;
+        let filteredGames = data.games;
 
         setGames(filteredGames);
 
@@ -75,10 +67,10 @@ export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullsc
         source.src = `/videos/${game.slug}/thumbnail.${getVideoSize(game)}.h264.mp4`;
         source.type = 'video/mp4';
         video.appendChild(source);
-        
+
         // Load the video immediately
         video.load();
-        
+
         // Set up a canplay event listener to play the video as soon as it's ready
         const playWhenReady = () => {
           video.play().catch(error => {
@@ -88,9 +80,9 @@ export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullsc
           });
           video.removeEventListener('canplay', playWhenReady);
         };
-        
+
         video.addEventListener('canplay', playWhenReady);
-        
+
         setLoadedVideos(prev => new Set(prev).add(game.slug));
       }
     } else {
@@ -127,13 +119,9 @@ export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullsc
     else return '1x1';
   };
 
-  if (gridWidth === 0 || isLoading) {
-    return null;
-  }
-
   return (
     <>
-      <div className="container" id="gameGrid">
+      <div className="grid-container" id="gameGrid">
         <PlaceholderItem />
         {selectedGame && <GameContainer game={selectedGame} onEnterFullscreen={onEnterFullscreen} />}
         {games.map((game, index) => {
