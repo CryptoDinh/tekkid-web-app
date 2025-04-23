@@ -3,12 +3,12 @@ import { getGamesByCategory } from '@/lib/db';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } =await params;
     const games = await getGamesByCategory(id);
-    
+
     // Transform the data to match the expected format
     const transformedGames = games.map(game => ({
       ...game,
@@ -23,7 +23,7 @@ export async function GET(
       // Add landscape property based on w and h
       landscape: game.w > game.h
     }));
-    
+
     return NextResponse.json({ games: transformedGames });
   } catch (error) {
     console.error('Error fetching games by category:', error);
