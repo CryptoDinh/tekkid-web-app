@@ -65,9 +65,6 @@ const GameContainerFullscreen: React.FC<GameContainerFullscreenProps> = ({ game,
     };
   }, [onExit]);
 
-  // Use game_url if available, otherwise fall back to gameLink
-  const gameUrl = game.game_url || game.gameLink || '';
-
   return (
     <div
       ref={containerRef}
@@ -83,7 +80,7 @@ const GameContainerFullscreen: React.FC<GameContainerFullscreenProps> = ({ game,
         zIndex: 9999
       }}
     >
-      <GamePlayer gameUrl={gameUrl} iframeRef={iframeRef} />
+      <GamePlayer gameUrl={game.game_url} iframeRef={iframeRef} />
       <GameController
         name={game.name}
         developer={game.developer || 'Unknown'}
