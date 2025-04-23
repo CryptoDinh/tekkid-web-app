@@ -6,7 +6,6 @@ import GameContainer from '@/components/GameContainer';
 import { PlaceholderItem } from './PlaceholderItem';
 import { useGridWidth } from '@/hooks/useGridWidth';
 import { Game, GamesData } from '@/types/game';
-import SkeletonLoader from './SkeletonLoader';
 
 interface GameGridProps {
   selectedGameSlug?: string;
