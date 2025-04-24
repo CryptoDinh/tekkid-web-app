@@ -68,6 +68,25 @@ export async function getGamesByCategory(categoryId: number, limit: number = 100
   return result;
 }
 
+export async function getGamesByCategorySlug(categorySlug: string, limit: number = 100, offset: number = 0): Promise<any[]> {
+  try {
+    const query = `
+      SELECT g.*
+      FROM "tekkid-games"."games" g
+      INNER JOIN "tekkid-games"."categories" c ON c.id = ANY(g.category_ids)
+      WHERE c.slug = $1
+      ORDER BY g.featured DESC, g.plays DESC
+      LIMIT $2 OFFSET $3
+    `;
+    const values = [categorySlug, limit, offset];
+    const result = await pool.query(query, values);
+    return result;
+  } catch (error) {
+    console.error('Error fetching games by category slug:', error);
+    return [];
+  }
+}
+
 // Get featured games with limit
 export async function getFeaturedGames(limit: number = 200) {
   const result = await query(
@@ -93,10 +112,10 @@ export async function getAllCategories() {
   return result;
 }
 
-// Get category ID by name
+// Get category ID by slug
 export async function getCategoryIdBySlug(categorySlug: string): Promise<number | null> {
   try {
-    const query = `SELECT id FROM categories WHERE name = $1`;
+    const query = `SELECT id FROM categories WHERE slug = $1`;
     const values = [categorySlug];
     const result = await pool.query(query, values);
 
