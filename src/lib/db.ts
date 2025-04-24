@@ -55,6 +55,26 @@ export async function getRelatedGames(slug: string, limit: number = 50) {
   return result;
 }
 
+// Get related games by tags
+export async function getRelatedGamesByTags(slug: string, limit: number = 50) {
+  const result = await query(
+    `SELECT * FROM "tekkid-games"."games"
+     WHERE EXISTS (
+       SELECT 1 FROM unnest(tag_ids) tag
+       WHERE tag = ANY(
+         SELECT unnest(tag_ids)
+         FROM "tekkid-games"."games"
+         WHERE slug = $1
+       )
+     )
+     AND slug != $1
+     ORDER BY featured DESC, plays DESC
+     LIMIT $2`,
+    [slug, limit]
+  );
+  return result;
+}
+
 // Get games by category with limit, prioritize featured games
 export async function getGamesByCategory(categoryId: number, limit: number = 100, offset: number = 0) {
   const result = await query(
@@ -85,6 +105,18 @@ export async function getGamesByCategorySlug(categorySlug: string, limit: number
     console.error('Error fetching games by category slug:', error);
     return [];
   }
+}
+
+// Get games by tag
+export async function getGamesByTag(tagId: number, limit: number = 100, offset: number = 0) {
+  const result = await query(
+    `SELECT * FROM "tekkid-games"."games"
+     WHERE $1 = ANY(tag_ids)
+     ORDER BY featured DESC, plays DESC
+     LIMIT $2 OFFSET $3`,
+    [tagId, limit, offset]
+  );
+  return result;
 }
 
 // Get featured games with limit

@@ -11,7 +11,7 @@ export async function GET() {
         // Use category_ids directly as it's already an array of numbers
         categories: game.category_ids? game.category_ids : [],
         // Parse tag_ids as JSON if it's a string
-        tags: game.tag_ids ? JSON.parse(game.tag_ids) : [],
+        tags: game.tag_ids,
         // Add landscape property based on w and h
         landscape: game.w > game.h
       }))

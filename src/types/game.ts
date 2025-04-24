@@ -1,6 +1,6 @@
 export interface Game {
   id: number;
-  category_ids: number[]; // Changed to array of numbers
+  category_ids: number[];
   name: string;
   image: string;
   plays: number;
@@ -11,11 +11,10 @@ export interface Game {
   h: number;
   featured: number;
   mobile: boolean;
-  tag_ids: string | null;
+  tag_ids: number[]; // Changed from string | null to number[]
   video_url: string | null;
   slug: string;
   game_url: string;
-  // For backward compatibility
   developer?: string;
   categories?: string[];
   landscape?: boolean;
