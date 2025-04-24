@@ -9,12 +9,10 @@ interface AboutGameSectionProps {
 
 export default function AboutGameSection({ gameSlug }: AboutGameSectionProps) {
   const [game, setGame] = useState<Game | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchGame = async () => {
       try {
-        setLoading(true);
         const response = await fetch(`/api/games/${gameSlug}`);
         if (!response.ok) {
           throw new Error('Game not found');
@@ -24,31 +22,14 @@ export default function AboutGameSection({ gameSlug }: AboutGameSectionProps) {
       } catch (error) {
         console.error('Error fetching game data:', error);
       } finally {
-        setLoading(false);
       }
     };
 
     fetchGame();
   }, [gameSlug]);
 
-  if (loading) {
-    return (
-      <div className="about-section">
-        <div className="about-content">
-          <p>Loading game information...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (!game) {
-    return (
-      <div className="about-section">
-        <div className="about-content">
-          <p>Game information not found.</p>
-        </div>
-      </div>
-    );
+    return null; // or a loading spinner
   }
 
   // Format the description by replacing line breaks with <br> tags

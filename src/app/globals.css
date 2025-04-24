@@ -117,14 +117,14 @@ main {
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  min-height: 100vh;
 }
 
 
 .grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, var(--cellSize, 94px));
-  grid-template-rows: repeat(auto-fit, var(--cellSize, 94px));
+  /* grid-template-rows: repeat(auto-fit, var(--cellSize, 94px)); */
+  grid-auto-rows: var(--cellSize, 94px);
   grid-auto-flow: row dense;
   gap: var(--cellSpacing);
   justify-content: center;
@@ -134,7 +134,8 @@ main {
 }
 
 #gameGrid {
-  min-height: 100vh;
+  grid-row: 1; /* Explicitly set grid row */
+  min-height: 0; /* Prevent overflow */
   position: relative;
   z-index: 1;
 }
@@ -167,6 +168,16 @@ main {
   grid-row: span 2;
   width: calc(94px * 2 + 16px);
   height: calc(94px * 2 + 16px);
+}
+
+@media screen and (max-width: 768px) {
+  .item-featured {
+    grid-column: span 1;
+    grid-row: span 1;
+    width: var(--cellSize);
+    height: var(--cellSize);
+  }
+
 }
 
 .item:hover {
@@ -261,9 +272,11 @@ main {
 }
 
 #categoryGrid {
+  position: relative;
   grid-row: 2;
   margin-top: 20px;
   margin-bottom: 20px;
+  z-index: 1;
 }
 
 .category-item {
@@ -335,6 +348,51 @@ main {
 
 .category-item.featured img {
   grid-column: 1 / -1;
+}
+
+@media screen and (max-width: 768px) {
+  .category-item,
+  .category-item.featured {
+    grid-column: span 3;
+    grid-row: span 1;
+    width: calc(94px * 3 + 16px * 2);
+    height: 94px;
+    display: grid;
+    grid-template-columns: 94px 1fr;
+    gap: 0;
+  }
+
+  .category-item.featured img,
+  .category-item img {
+    grid-column: 1;
+    width: 94px;
+    height: 94px;
+  }
+
+  .category-item.featured .category-name,
+  .category-item .category-name {
+    position: relative;
+    grid-column: 2;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    color: black;
+  }
+
+  .category-item:hover,
+  .category-item.featured:hover {
+    transform: scale(1.02);
+  }
+}
+
+/* Adjust for very small screens */
+@media screen and (max-width: 400px) {
+  .category-item,
+  .category-item.featured {
+    width: 100%;
+  }
 }
 
 /* This is the game container */
@@ -834,4 +892,31 @@ body:has(.game-container-fullscreen) {
   background-color: #000;
   display: flex;
   flex-direction: column;
+}
+
+.loading-spinner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 249, 218, 0.057);
+  z-index: 2;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

@@ -59,9 +59,6 @@ export default function GameContainer({ game, onEnterFullscreen }: GameContainer
     return null;
   }
 
-  // Use game_url if available, otherwise fall back to gameLink
-  const gameUrl = game.game_url;
-
   if (isMobile && !isFullscreen) {
     return (
       <div ref={containerRef} className="game-container">
@@ -83,7 +80,7 @@ export default function GameContainer({ game, onEnterFullscreen }: GameContainer
           </div>
         </div>
         <div style={{ display: 'none' }}>
-          <GamePlayer gameUrl={gameUrl} iframeRef={iframeRef} />
+          <GamePlayer gameUrl={game.game_url} iframeRef={iframeRef} />
         </div>
       </div>
     );
@@ -91,7 +88,7 @@ export default function GameContainer({ game, onEnterFullscreen }: GameContainer
 
   return (
     <div ref={containerRef} className="game-container">
-      <GamePlayer gameUrl={gameUrl} iframeRef={iframeRef} />
+      <GamePlayer gameUrl={game.game_url} iframeRef={iframeRef} />
       <GameController
         name={game.name}
         developer={game.developer || 'Unknown'}

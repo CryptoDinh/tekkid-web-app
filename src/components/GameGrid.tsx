@@ -6,6 +6,7 @@ import GameContainer from '@/components/GameContainer';
 import { PlaceholderItem } from './PlaceholderItem';
 import { useGridWidth } from '@/hooks/useGridWidth';
 import { Game, GamesData } from '@/types/game';
+import { LoadingSpinner } from './LoadingSpinner';
 
 interface GameGridProps {
   selectedGameSlug?: string;
@@ -117,6 +118,10 @@ export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullsc
     if (game.featured === 1) return '2x2';
     else return '1x1';
   };
+  
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <>
