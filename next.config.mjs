@@ -10,7 +10,9 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'img.poki-cdn.com',
         pathname: '/**',
-      },new URL('https://img.gamemonetize.com/**')
+      },
+      new URL('https://img.gamemonetize.com/**'),
+      new URL('https://img.gamedistribution.com/**'),
     ],  
   },
 };

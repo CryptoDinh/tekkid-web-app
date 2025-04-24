@@ -1,6 +1,6 @@
 export interface Game {
   id: number;
-  catalog_ids: string;
+  category_ids: number[]; // Changed to array of numbers
   name: string;
   image: string;
   plays: number;
@@ -23,4 +23,4 @@ export interface Game {
 
 export interface GamesData {
   games: Game[];
-} 
+}

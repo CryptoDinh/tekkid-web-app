@@ -20,7 +20,7 @@ export async function GET(
     const transformedGame = {
       ...game,
       // Parse catalog_ids as JSON if it's a string
-      categories: game.catalog_ids ? JSON.parse(game.catalog_ids) : [],
+      categories: game.catalog_ids,
       // Parse tag_ids as JSON if it's a string
       tags: game.tag_ids ? JSON.parse(game.tag_ids) : [],
       // Add landscape property based on w and h

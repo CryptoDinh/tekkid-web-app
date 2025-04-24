@@ -4,23 +4,20 @@ import { getAllGames } from '@/lib/db';
 export async function GET() {
   try {
     const games = await getAllGames();
-    
-    // Transform the data to match the expected format
-    const transformedGames = games.map(game => ({
-      ...game,
-      // Add backward compatibility fields
-      game_url: game.game_url,
-      // Parse catalog_ids as JSON if it's a string
-      categories: game.catalog_ids ? JSON.parse(game.catalog_ids) : [],
-      // Parse tag_ids as JSON if it's a string
-      tags: game.tag_ids ? JSON.parse(game.tag_ids) : [],
-      // DO NOT Convert featured from number to boolean
-      featured: game.featured,
-      // Add landscape property based on w and h
-      landscape: game.w > game.h
-    }));
-    
-    return NextResponse.json({ games: transformedGames });
+
+    // Transform and sort games - featured games first
+    const transformedGames = games
+      .map(game => ({
+        ...game,
+        // Use category_ids directly as it's already an array of numbers
+        categories: game.category_ids,
+        // Parse tag_ids as JSON if it's a string
+        tags: game.tag_ids ? JSON.parse(game.tag_ids) : [],
+        // Add landscape property based on w and h
+        landscape: game.w > game.h
+      }))
+
+    return transformedGames;
   } catch (error) {
     console.error('Error fetching games:', error);
     return NextResponse.json(
@@ -28,4 +25,4 @@ export async function GET() {
       { status: 500 }
     );
   }
-} 
+}

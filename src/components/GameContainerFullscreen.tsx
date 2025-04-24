@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import GamePlayer from './GamePlayer';
 import GameController from './GameController';
 import { Game } from '@/types/game';
@@ -13,74 +13,53 @@ interface GameContainerFullscreenProps {
 const GameContainerFullscreen: React.FC<GameContainerFullscreenProps> = ({ game, onExit }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
-
-  const updateDimensions = () => {
-    if (containerRef.current) {
-      setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight
-      });
-    }
-  };
-
-  const handleFullscreenChange = () => {
-    const isFullscreen = document.fullscreenElement !== null;
-    setIsNativeFullscreen(isFullscreen);
-    if (!isFullscreen) {
-      onExit();
-    }
-  };
+  const [windowHeight, setWindowHeight] = useState<number>(0);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    const updateHeight = () => {
+      setWindowHeight(window.innerHeight);
+    };
 
-    // Check if fullscreen API is supported
-    if (container.requestFullscreen) {
-      container.requestFullscreen().catch(err => {
-        console.warn('Error attempting to enable fullscreen:', err);
-      });
-    }
+    // Initial height
+    updateHeight();
 
-    // Set up event listeners
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    window.addEventListener('resize', updateDimensions);
-    window.addEventListener('orientationchange', updateDimensions);
-    window.addEventListener('scroll', updateDimensions);
+    // Update height on resize and orientation change
+    window.addEventListener('resize', updateHeight);
+    window.addEventListener('orientationchange', updateHeight);
 
-    // Initial dimensions update
-    updateDimensions();
-
-    // Periodic check for dimensions (helps with mobile browser UI changes)
-    const interval = setInterval(updateDimensions, 100);
+    // iOS Safari specific events
+    window.addEventListener('scroll', updateHeight);
+    window.visualViewport?.addEventListener('resize', updateHeight);
 
     return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      window.removeEventListener('resize', updateDimensions);
-      window.removeEventListener('orientationchange', updateDimensions);
-      window.removeEventListener('scroll', updateDimensions);
-      clearInterval(interval);
+      window.removeEventListener('resize', updateHeight);
+      window.removeEventListener('orientationchange', updateHeight);
+      window.removeEventListener('scroll', updateHeight);
+      window.visualViewport?.removeEventListener('resize', updateHeight);
     };
-  }, [onExit]);
+  }, []);
 
   return (
     <div
       ref={containerRef}
+      className="fullscreen-game-container"
       style={{
         position: 'fixed',
         top: 0,
         left: 0,
         width: '100%',
-        height: '100%',
+        height: windowHeight || '100%',
         backgroundColor: '#000',
         display: 'flex',
         flexDirection: 'column',
-        zIndex: 9999
+        zIndex: 9999,
+        overflow: 'hidden'
       }}
     >
-      <GamePlayer gameUrl={game.game_url} iframeRef={iframeRef} />
+      <GamePlayer 
+        gameUrl={game.game_url} 
+        iframeRef={iframeRef}
+      />
       <GameController
         name={game.name}
         developer={game.developer || 'Unknown'}
@@ -95,4 +74,4 @@ const GameContainerFullscreen: React.FC<GameContainerFullscreenProps> = ({ game,
   );
 };
 
-export default GameContainerFullscreen; 
+export default GameContainerFullscreen;

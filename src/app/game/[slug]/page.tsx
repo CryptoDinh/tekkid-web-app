@@ -1,5 +1,5 @@
 'use client';
-import React, { use, useState, useEffect } from 'react';
+import React, { use, useState } from 'react';
 import GameGrid from '@/components/GameGrid';
 import CategoryGrid from '@/components/CategoryGrid';
 import AboutGameSection from '@/components/AboutGameSection';
@@ -18,28 +18,6 @@ export default function GamePage({
     const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
     const [fullscreenGame, setFullscreenGame] = useState<Game | null>(null);
     const { isSupported } = useFullscreen();
-    const [game, setGame] = useState<Game | null>(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchGame = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch(`/api/games/${slug}`);
-                if (!response.ok) {
-                    throw new Error('Game not found');
-                }
-                const gameData = await response.json() as Game;
-                setGame(gameData);
-            } catch (error) {
-                console.error('Error fetching game data:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchGame();
-    }, [slug]);
 
     // Handle entering fullscreen mode
     const handleEnterFullscreen = (game: Game) => {

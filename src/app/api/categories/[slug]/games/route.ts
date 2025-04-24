@@ -1,26 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getGamesByCategory } from '@/lib/db';
+import { getCategoryIdBySlug } from '@/lib/db';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { slug: string } }
 ) {
   try {
-    const { id } =await params;
-    const games = await getGamesByCategory(id);
+    const { slug } = params;
+
+    // Fetch the category ID from the database based on the category name
+    const categoryId = await getCategoryIdBySlug(slug);
+
+    if (!categoryId) {
+      return NextResponse.json({ error: 'Category not found' }, { status: 404 });
+    }
+
+    const games = await getGamesByCategory(categoryId);
 
     // Transform the data to match the expected format
     const transformedGames = games.map(game => ({
       ...game,
-      // Add backward compatibility fields
-      game_url: game.game_url,
-      // Parse catalog_ids as JSON if it's a string
-      categories: game.catalog_ids ? JSON.parse(game.catalog_ids) : [],
-      // Parse tag_ids as JSON if it's a string
+      categories: game.catalog_ids,
       tags: game.tag_ids ? JSON.parse(game.tag_ids) : [],
-      // Do not convert featured from number to boolean
       featured: game.featured,
-      // Add landscape property based on w and h
       landscape: game.w > game.h
     }));
 
@@ -32,4 +35,4 @@ export async function GET(
       { status: 500 }
     );
   }
-} 
+}

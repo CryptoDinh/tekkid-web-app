@@ -25,9 +25,14 @@ export async function query(text: string, params?: any[]) {
   }
 }
 
-// Get all games
-export async function getAllGames() {
-  const result = await query('SELECT * FROM "tekkid-games"."games" ORDER BY id');
+// Get all games with limit and offset, prioritize featured games
+export async function getAllGames(limit: number = 200, offset: number = 0) {
+  const result = await query(
+    `SELECT * FROM "tekkid-games"."games"
+     ORDER BY featured DESC, plays DESC
+     LIMIT $1 OFFSET $2`,
+    [limit, offset]
+  );
   return result;
 }
 
@@ -37,18 +42,41 @@ export async function getGameBySlug(slug: string) {
   return result[0];
 }
 
-// Get games by category
-export async function getGamesByCategory(categoryId: string) {
+// Get related games by category with limit, prioritize featured games
+export async function getRelatedGames(slug: string, limit: number = 50) {
   const result = await query(
-    'SELECT * FROM "tekkid-games"."games" WHERE catalog_ids LIKE $1 ORDER BY id',
-    [`%${categoryId}%`]
+    `SELECT * FROM "tekkid-games"."games"
+     WHERE $1 = ANY(category_ids)
+     AND slug != $2
+     ORDER BY featured DESC, plays DESC
+     LIMIT $3`,
+    [slug, slug, limit]
   );
   return result;
 }
 
-// Get featured games
-export async function getFeaturedGames() {
-  const result = await query('SELECT * FROM "tekkid-games"."games" WHERE featured = 1 ORDER BY id');
+// Get games by category with limit, prioritize featured games
+export async function getGamesByCategory(categoryId: number, limit: number = 100, offset: number = 0) {
+  const result = await query(
+    `SELECT * FROM "tekkid-games"."games"
+     WHERE $1 = ANY(category_ids)
+     ORDER BY featured DESC, plays DESC
+     LIMIT $2 OFFSET $3`,
+    [categoryId, limit, offset]
+  );
+
+  return result;
+}
+
+// Get featured games with limit
+export async function getFeaturedGames(limit: number = 200) {
+  const result = await query(
+    `SELECT * FROM "tekkid-games"."games"
+     WHERE featured = 1
+     ORDER BY plays DESC
+     LIMIT $1`,
+    [limit]
+  );
   return result;
 }
 
@@ -63,4 +91,22 @@ export async function getAllCategories() {
     'SELECT * FROM "tekkid-games"."categories" ORDER BY id'
   );
   return result;
-} 
+}
+
+// Get category ID by name
+export async function getCategoryIdBySlug(categorySlug: string): Promise<number | null> {
+  try {
+    const query = `SELECT id FROM categories WHERE name = $1`;
+    const values = [categorySlug];
+    const result = await pool.query(query, values);
+
+    if (result.length > 0) {
+      return result[0].id; // Assuming 'id' is the column name for the category ID
+    } else {
+      return null; // Category not found
+    }
+  } catch (error) {
+    console.error('Error fetching category ID by name:', error);
+    return null;
+  }
+}

@@ -28,6 +28,7 @@ export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullsc
         setIsLoading(true);
         let url = '/api/games';
 
+        // If we have a categorySlug, fetch category games
         if (categorySlug) {
           url = `/api/categories/${categorySlug}/games`;
         }
@@ -38,9 +39,19 @@ export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullsc
 
         setGames(filteredGames);
 
+        // If we have a selectedGameSlug, find and set the selected game
         if (selectedGameSlug) {
-          const game = filteredGames.find((g: Game) => g.slug === selectedGameSlug);
-          setSelectedGame(game || null);
+          const selectedGame = filteredGames.find(g => g.slug === selectedGameSlug);
+          if (selectedGame) {
+            setSelectedGame(selectedGame);
+          } else {
+            // If game not found in list, fetch it directly
+            const gameResponse = await fetch(`/api/games/${selectedGameSlug}`);
+            if (gameResponse.ok) {
+              const gameData = await gameResponse.json() as Game;
+              setSelectedGame(gameData);
+            }
+          }
         }
       } catch (error) {
         console.error('Error loading games:', error);
