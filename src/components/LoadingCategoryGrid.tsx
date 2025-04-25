@@ -1,25 +1,40 @@
 import React from 'react';
+import '@/styles/components/LoadingCategoryGrid.css';
 
 export function LoadingCategoryGrid() {
   return (
-    <div className="grid-container" id="categoryGrid">
+    <div className="loading-category-grid">
       {/* Featured category skeleton */}
-      <div className="category-item featured animate-pulse">
-        <div className="w-full h-full bg-gray-200 rounded-lg" />
-        <div className="absolute bottom-0 left-0 right-0 bg-gray-100 bg-opacity-70 p-2">
-          <div className="h-4 w-24 bg-gray-300 rounded mx-auto" />
+      <div className="loading-category-item featured ibx">
+        <div className="w-24 h-24 bg-gray-200 rounded-lg" />
+        <div className="name-overlay">
+          <div className="h-4 w-24 bg-gray-300 rounded" />
         </div>
       </div>
 
-      {/* Regular category skeletons */}
-      {[...Array(15)].map((_, index) => (
-        <div key={index} className="category-item animate-pulse">
-          <div className="w-24 h-24 bg-gray-200 rounded-lg" />
-          <div className="flex-1 flex items-center justify-center">
-            <div className="h-4 w-20 bg-gray-300 rounded" />
+      {/* Main content area */}
+      <div className="igc">
+        {[...Array(12)].map((_, index) => (
+          <div key={index} className="loading-category-item">
+            <div className="w-24 h-24 bg-gray-200 rounded-lg" />
+            <div className="name-overlay">
+              <div className="h-4 w-20 bg-gray-300 rounded" />
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+
+      {/* Extra content area */}
+      <div className="egc">
+        {[...Array(3)].map((_, index) => (
+          <div key={`extra-${index}`} className="loading-category-item">
+            <div className="w-24 h-24 bg-gray-200 rounded-lg" />
+            <div className="name-overlay">
+              <div className="h-4 w-20 bg-gray-300 rounded" />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
