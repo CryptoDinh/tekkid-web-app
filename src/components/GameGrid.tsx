@@ -18,7 +18,6 @@ export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullsc
   const [games, setGames] = useState<Game[]>([]);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
-  const gridWidth = useGridWidth();
   const [isLoading, setIsLoading] = useState(true);
   const [loadedVideos, setLoadedVideos] = useState<Set<string>>(new Set());
 
@@ -62,12 +61,6 @@ export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullsc
 
     loadGames();
   }, [selectedGameSlug, categorySlug]);
-
-  useEffect(() => {
-    if (!isLoading && gridWidth > 0) {
-      document.querySelector('main')?.classList.add('grid-loaded');
-    }
-  }, [isLoading, gridWidth]);
 
   const handleMouseEnter = (game: Game) => {
     if (game.video_url && !loadedVideos.has(game.slug)) {

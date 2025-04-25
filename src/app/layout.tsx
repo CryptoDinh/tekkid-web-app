@@ -1,15 +1,42 @@
-'use client';
+// Project: Tekkid - Free Online Games
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import DebugOverlay from "@/components/DebugOverlay";
 
-const inter = Inter({ subsets: ["latin"] });
+export const metadata: Metadata = {
+  title: {
+    default: "Tekkid - Free Online Games",
+    template: "%s | Tekkid",
+  },
+  description: "Play the best free online games at Tekkid. No downloads, no login, just instant fun!",
+  metadataBase: new URL("https://tekkid.com"),
+  openGraph: {
+    title: "Tekkid - Free Online Games",
+    description: "Play the best free online games at Tekkid. No downloads, no login, just instant fun!",
+    url: "https://tekkid.com",
+    siteName: "Tekkid",
+    images: [
+      {
+        url: "/images/logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Tekkid - Free Online Games",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
 
-// export const metadata: Metadata = {
-//   title: "GameHub - Free Online Games",
-//   description: "Play the best free online games at GameHub. No downloads, no login, just instant fun!",
-// };
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  minimalUi: true,
+  shrinkToFit: false,
+  viewportFit: "cover",
+};
+
 
 export default function RootLayout({
   children,
@@ -19,12 +46,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta
-          name="viewport"
-          content='width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no'
-        />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-title" content="Tekkid" />
+        <meta name="color-scheme" content="only light" />
+        <meta name="robots" content="max-image-preview:large" />
+        <meta name="format-detection" content="telephone=no" />
         <link
           rel="preload"
           href="/fonts/proxima-nova-regular-latin.woff2"
@@ -54,7 +82,8 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className={inter.className}>
+      <body>
+        {/* <DebugOverlay /> */}
         {children}
       </body>
     </html>

@@ -11,7 +11,7 @@ export async function GET(
     
     if (!game) {
       return NextResponse.json(
-        { error: 'Game not found' },
+        { error: 'Game not found ', slug },
         { status: 404 }
       );
     }
@@ -19,10 +19,10 @@ export async function GET(
     // Transform the data to match the expected format
     const transformedGame = {
       ...game,
-      // Parse catalog_ids as JSON if it's a string
-      categories: game.catalog_ids,
-      // Parse tag_ids as JSON if it's a string
-      tags: game.tag_ids ? JSON.parse(game.tag_ids) : [],
+      // Use category_ids directly as it's already an array
+      categories: game.category_ids,
+      // Use tag_ids directly as it's already an array
+      tags: game.tag_ids || [],
       // Add landscape property based on w and h
       landscape: game.w > game.h
     };
@@ -38,4 +38,4 @@ export async function GET(
       { status: 500 }
     );
   }
-} 
+}

@@ -15,12 +15,12 @@ export default function AboutGameSection({ gameSlug }: AboutGameSectionProps) {
       try {
         const response = await fetch(`/api/games/${gameSlug}`);
         if (!response.ok) {
-          throw new Error('Game not found');
+          throw new Error('Game not found: ' + gameSlug);
         }
         const gameData = await response.json() as Game;
         setGame(gameData);
       } catch (error) {
-        console.error('Error fetching game data:', error);
+        console.error('Error fetching game data:', error, gameSlug);
       } finally {
       }
     };
