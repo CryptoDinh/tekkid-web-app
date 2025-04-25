@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { LoadingCategoryGrid } from './LoadingCategoryGrid';
 
 interface Category {
   id: number;
@@ -19,13 +20,13 @@ interface CategoriesResponse {
 
 export default function CategoryGrid() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        setLoading(true);
+        setIsLoading(true);
         const response = await fetch('/api/categories');
         if (!response.ok) {
           throw new Error('Failed to fetch categories');
@@ -36,12 +37,16 @@ export default function CategoryGrid() {
         console.error('Error loading categories:', error);
         setError(error instanceof Error ? error.message : 'Failed to load categories');
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     loadCategories();
   }, []);
+
+  if (isLoading) {
+    return <LoadingCategoryGrid />;
+  }
 
   if (error) {
     return <div className="grid-container error-message">Error: {error}</div>;

@@ -1062,3 +1062,159 @@ body.fullscreen-mode {
     display: none;
   }
 }
+
+/* Styles for loading grid skelaton*/
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background: var(--grey-9);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Game item loading styles */
+.item.animate-pulse {
+  aspect-ratio: 1;
+  background: var(--green-8);
+  border-radius: 16px;
+  box-shadow: var(--shadow-mid);
+  position: relative;
+  overflow: hidden;
+}
+
+.item.animate-pulse::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--green-7),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+/* Featured game item loading */
+.item.item-featured.animate-pulse {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* Category item loading styles */
+.category-item.animate-pulse {
+  background: var(--grey-7);
+  box-shadow: var(--shadow-mid);
+  overflow: hidden;
+}
+
+.category-item.animate-pulse .bg-gray-200 {
+  background: var(--green-8);
+}
+
+.category-item.animate-pulse .name-overlay {
+  background: var(--grey-5);
+}
+
+/* Loading shimmer animation */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Featured category loading */
+.category-item.featured.animate-pulse {
+  background: var(--green-8);
+}
+
+.category-item.featured.animate-pulse::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--green-7),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+/* Mobile adjustments */
+@media screen and (max-width: 768px) {
+  .category-item.animate-pulse .bg-gray-200 {
+    background: var(--green-8);
+  }
+  
+  .category-item.animate-pulse {
+    background: var(--grey-7);
+  }
+}
+
+/* Ensure skeleton items maintain aspect ratio */
+.item.animate-pulse {
+  aspect-ratio: 16/9;
+  position: relative;
+}
+
+/* Featured item styling */
+.item.item-featured.animate-pulse {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* Skeleton overlay styling */
+.animate-pulse .name-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+}
+
+/* Category loading skeleton styles */
+.category-item.animate-pulse {
+  background: transparent;
+  box-shadow: none;
+}
+
+.category-item.animate-pulse .bg-gray-200 {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.category-item.featured.animate-pulse {
+  position: relative;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 768px) {
+  .category-item.animate-pulse,
+  .category-item.featured.animate-pulse {
+    display: grid;
+    grid-template-columns: 94px 1fr;
+  }
+
+  .category-item.animate-pulse .bg-gray-200 {
+    width: 94px;
+    height: 94px;
+  }
+}
