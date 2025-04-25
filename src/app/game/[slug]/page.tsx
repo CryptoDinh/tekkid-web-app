@@ -1,5 +1,5 @@
 'use client';
-import React, { use, useState } from 'react';
+import React, { use, useState, useEffect } from 'react';
 import GameGrid from '@/components/GameGrid';
 import CategoryGrid from '@/components/CategoryGrid';
 import AboutGameSection from '@/components/AboutGameSection';
@@ -18,6 +18,25 @@ export default function GamePage({
     const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
     const [fullscreenGame, setFullscreenGame] = useState<Game | null>(null);
     const { isSupported } = useFullscreen();
+
+    // Cleanup when component unmounts
+    useEffect(() => {
+        return () => {
+            setFullscreenGame(null);
+            setIsFullscreen(false);
+        };
+    }, []);
+
+    // Add error boundary
+    useEffect(() => {
+        const handleError = (error: ErrorEvent) => {
+            console.error('Game error:', error);
+            handleExitFullscreen();
+        };
+
+        window.addEventListener('error', handleError);
+        return () => window.removeEventListener('error', handleError);
+    }, []);
 
     // Handle entering fullscreen mode
     const handleEnterFullscreen = (game: Game) => {

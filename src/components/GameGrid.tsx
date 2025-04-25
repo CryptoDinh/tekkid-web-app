@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import GameContainer from '@/components/GameContainer';
 import { PlaceholderItem } from './PlaceholderItem';
-import { useGridWidth } from '@/hooks/useGridWidth';
 import { Game, GamesData } from '@/types/game';
 import { LoadingSpinner } from './LoadingSpinner';
 
@@ -17,9 +16,9 @@ interface GameGridProps {
 export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullscreen }: GameGridProps) {
   const [games, setGames] = useState<Game[]>([]);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
-  const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
   const [isLoading, setIsLoading] = useState(true);
-  const [loadedVideos, setLoadedVideos] = useState<Set<string>>(new Set());
+  const [activeVideoSlug, setActiveVideoSlug] = useState<string | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     const loadGames = async () => {
@@ -63,58 +62,13 @@ export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullsc
   }, [selectedGameSlug, categorySlug]);
 
   const handleMouseEnter = (game: Game) => {
-    if (game.video_url && !loadedVideos.has(game.slug)) {
-      // Add video source only when hovering for the first time
-      const video = videoRefs.current[game.slug];
-      if (video) {
-        const source = document.createElement('source');
-        source.src = `/videos/${game.slug}/thumbnail.${getVideoSize(game)}.h264.mp4`;
-        source.type = 'video/mp4';
-        video.appendChild(source);
-
-        // Load the video immediately
-        video.load();
-
-        // Set up a canplay event listener to play the video as soon as it's ready
-        const playWhenReady = () => {
-          video.play().catch(error => {
-            if (error.name !== 'AbortError') {
-              console.error('Error playing video:', error);
-            }
-          });
-          video.removeEventListener('canplay', playWhenReady);
-        };
-
-        video.addEventListener('canplay', playWhenReady);
-
-        setLoadedVideos(prev => new Set(prev).add(game.slug));
-      }
-    } else {
-      // If video is already loaded, just play it
-      const video = videoRefs.current[game.slug];
-      if (video && document.body.contains(video)) {
-        video.currentTime = 0;
-        try {
-          const playPromise = video.play();
-          if (playPromise !== undefined) {
-            playPromise.catch(error => {
-              if (error.name !== 'AbortError') {
-                console.error('Error playing video:', error);
-              }
-            });
-          }
-        } catch (error) {
-          console.error('Error setting up video playback:', error);
-        }
-      }
-    }
+    if (!game.video_url) return;
+    setActiveVideoSlug(game.slug);
   };
 
   const handleMouseLeave = (game: Game) => {
-    const video = videoRefs.current[game.slug];
-    if (video) {
-      video.pause();
-      video.currentTime = 0;
+    if (activeVideoSlug === game.slug) {
+      setActiveVideoSlug(null);
     }
   };
 
@@ -122,7 +76,24 @@ export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullsc
     if (game.featured === 1) return '2x2';
     else return '1x1';
   };
-  
+  const getVideoUrl = (game: Game): string => {
+    if (game.featured === 1) return game.video_url || '';
+    else return `/videos/${game.slug}/thumbnail.${getVideoSize(game)}.h264.mp4`;
+  }
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (activeVideoSlug) {
+        if (videoRef.current) {
+          videoRef.current.pause(); // Dừng video
+          videoRef.current.src = ""; // Giải phóng tài nguyên
+        }
+      }
+      setActiveVideoSlug(null);
+    };
+  }, []);
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -137,7 +108,7 @@ export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullsc
             return (
               <Link href={`/game/${game.slug}`} key={game.slug}>
                 <div
-                  className={`item${game.featured === 1 ? ' item-featured' : ''}`}
+                  className={`item${game.featured === 1 ? ' item-featured' : game.featured === 2 ? ' item-featured-2' : ''}`}
                   onMouseEnter={() => handleMouseEnter(game)}
                   onMouseLeave={() => handleMouseLeave(game)}
                 >
@@ -150,23 +121,19 @@ export default function GameGrid({ selectedGameSlug, categorySlug, onEnterFullsc
                     style={{ objectFit: 'cover' }}
                     priority={index < 6}
                   />
-                  {game.video_url && (
+                  <span className="name-overlay">{game.name}</span>
+                  {game.video_url && activeVideoSlug === game.slug && (
                     <video
-                      ref={(el) => {
-                        if (el) {
-                          videoRefs.current[game.slug] = el;
-                        }
-                      }}
+                      src={getVideoUrl(game)}
+                      ref={videoRef}
                       className="game-video"
                       playsInline
                       muted
                       loop
-                      preload='none'
+                      autoPlay
+                      preload="auto"
                     />
                   )}
-                  <div className="name-overlay">
-                    <span>{game.name}</span>
-                  </div>
                 </div>
               </Link>
             );

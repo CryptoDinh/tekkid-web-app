@@ -29,7 +29,7 @@ export async function query(text: string, params?: any[]) {
 export async function getAllGames(limit: number = 200, offset: number = 0) {
   const result = await query(
     `SELECT * FROM "tekkid-games"."games"
-     ORDER BY featured DESC, plays DESC
+     ORDER BY mobile DESC,featured DESC, rating DESC, plays DESC
      LIMIT $1 OFFSET $2`,
     [limit, offset]
   );
@@ -48,7 +48,7 @@ export async function getRelatedGames(slug: string, limit: number = 50) {
     `SELECT * FROM "tekkid-games"."games"
      WHERE $1 = ANY(category_ids)
      AND slug != $2
-     ORDER BY featured DESC, plays DESC
+     ORDER BY featured DESC, plays DESC, mobile DESC, rating DESC
      LIMIT $3`,
     [slug, slug, limit]
   );
@@ -80,7 +80,7 @@ export async function getGamesByCategory(categoryId: number, limit: number = 100
   const result = await query(
     `SELECT * FROM "tekkid-games"."games"
      WHERE $1 = ANY(category_ids)
-     ORDER BY featured DESC, plays DESC
+     ORDER BY featured DESC, plays DESC, mobile DESC, rating DESC
      LIMIT $2 OFFSET $3`,
     [categoryId, limit, offset]
   );
@@ -95,7 +95,7 @@ export async function getGamesByCategorySlug(categorySlug: string, limit: number
       FROM "tekkid-games"."games" g
       INNER JOIN "tekkid-games"."categories" c ON c.id = ANY(g.category_ids)
       WHERE c.slug = $1
-      ORDER BY g.featured DESC, g.plays DESC
+      ORDER BY g.featured DESC, g.plays DESC, g.mobile DESC, g.rating DESC
       LIMIT $2 OFFSET $3
     `;
     const values = [categorySlug, limit, offset];
@@ -112,7 +112,7 @@ export async function getGamesByTag(tagId: number, limit: number = 100, offset: 
   const result = await query(
     `SELECT * FROM "tekkid-games"."games"
      WHERE $1 = ANY(tag_ids)
-     ORDER BY featured DESC, plays DESC
+     ORDER BY featured DESC, plays DESC, mobile DESC, rating DESC
      LIMIT $2 OFFSET $3`,
     [tagId, limit, offset]
   );
@@ -124,7 +124,7 @@ export async function getFeaturedGames(limit: number = 200) {
   const result = await query(
     `SELECT * FROM "tekkid-games"."games"
      WHERE featured = 1
-     ORDER BY plays DESC
+     ORDER BY plays DESC, mobile DESC, rating DESC
      LIMIT $1`,
     [limit]
   );
