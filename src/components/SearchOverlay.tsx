@@ -59,7 +59,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
             </nav>
           </div>
           <h2 className="section-title">Popular this week</h2>
-          <div className="games-grid">
+          <div className="polular-games-grid">
             {/* Add game tiles here */}
           </div>
         </div>

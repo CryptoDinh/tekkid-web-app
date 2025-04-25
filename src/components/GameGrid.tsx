@@ -5,7 +5,6 @@ import Link from 'next/link';
 import GameContainer from '@/components/GameContainer';
 import { PlaceholderItem } from './PlaceholderItem';
 import { Game, GamesData } from '@/types/game';
-import { LoadingSpinner } from './LoadingSpinner';
 import { LoadingGameGrid } from './LoadingGameGrid';
 
 interface GameGridProps {

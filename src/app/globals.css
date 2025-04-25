@@ -117,35 +117,15 @@ body {
   overscroll-behavior: none;
   --bodyBackground: var(--green-7) url("/images/bg-diamante.svg")
 }
-/* body.desktopVersion {
-  background: var(--bodyBackground);
-  background-attachment: fixed;
-  background-position: 50%;
-  background-size: max(624px,100%);
-  color: var(--denim-blue);
-  font: 400 16px/24px var(--fontBody);
-  min-width: 314px;
-  overscroll-behavior: none;
-  --bodyBackground: var(--green-7) url(https://a.poki-cdn.com/images/bg-diamante.svg)
-} */
-/* body.mobileVersion {
-  background: var(--bodyBackground);
-  background-attachment: fixed;
-  background-position: 50%;
-  background-size: max(624px,100%);
-  color: var(--denim-blue);
-  font: 400 16px/24px var(--fontBody);
-  min-width: 314px;
-  overscroll-behavior: none;
-  --bodyBackground: var(--green-7) url(/images/bg-diamante.svg)
-} */
 
 body.auth {
   background: none
 }
+
 body.isFullscreen {
   overflow: hidden
 }
+
 main {
   display: flex;
   flex-direction: column;
@@ -155,7 +135,6 @@ main {
 .grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, var(--cellSize, 94px));
-  /* grid-template-rows: repeat(auto-fit, var(--cellSize, 94px)); */
   grid-auto-rows: var(--cellSize, 94px);
   grid-auto-flow: row dense;
   gap: var(--cellSpacing);
@@ -1040,7 +1019,7 @@ body.fullscreen-mode {
   margin-bottom: 16px;
 }
 
-.games-grid {
+.popular-games-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(94px, 1fr));
   gap: 16px;

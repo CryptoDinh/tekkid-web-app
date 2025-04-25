@@ -1,0 +1,327 @@
+/* Base grid container styles */
+.loading-grid-container {
+  display: grid;
+  grid-auto-flow: row dense;
+  justify-content: center;
+  margin: 16px auto 0;
+  padding: 0;
+  grid-gap: var(--cellSpacing);
+  grid-template-columns: repeat(var(--gridTemplateColumns, 3), var(--cellSize));
+  grid-template-rows: repeat(auto-fill, var(--cellSize));
+}
+
+.loading-grid {
+  display: grid;
+  grid-auto-flow: row dense;
+  justify-content: center;
+  margin: 16px auto 0;
+  padding: 0 var(--gridMargin);
+  max-width: var(--maxPageWidth);
+  grid-gap: var(--cellSpacing);
+  grid-template-columns: repeat(var(--gridTemplateColumns, 3), var(--cellSize));
+  grid-template-rows: repeat(auto-fill, var(--cellSize));
+  width: 100%;
+}
+
+/* Loading grid template areas for different screen sizes */
+@media (min-width:111px) and (max-width:990.9px) {
+  .loading-grid {
+    --gridTemplateColumns: 7;
+    grid-template-areas: 
+      "...  ...  ip0  ip0  ip0  ip1  ip1" 
+      "...  ...  ip0  ip0  ip0  ip1  ip1" 
+      "ip2  ip2  ip0  ip0  ip0  ...  ..." 
+      "ip2  ip2  ...  ip3  ip3  ...  ..." 
+      "...  ...  ...  ip3  ip3  ip4  ip4" 
+      "...  ...  ...  ...  ...  ip4  ip4" 
+      "ip5  ip5  ip5  ...  ...  ...  ..." 
+      "ip5  ip5  ip5  ...  ip6  ip6  ..." 
+      "ip5  ip5  ip5  ...  ip6  ip6  ..." 
+      "...  ...  ip7  ip7  ...  ...  ..." 
+      "...  ...  ip7  ip7  ...  ...  ..." 
+      "...  ...  ...  ip8  ip8  ip8  ..." 
+      "...  ...  ...  ip8  ip8  ip8  ..." 
+      "ip9  ip9  ...  ip8  ip8  ip8  ..." 
+      "ip9  ip9  ...  ...  ...  ip10 ip10" 
+      "...  ...  ...  ...  ...  ip10 ip10" 
+      "ip11 ip11 ip11 ...  ip13 ip13 ..." 
+      "ip11 ip11 ip11 ...  ip13 ip13 ..." 
+      "ip11 ip11 ip11 ...  ...  ...  ..." 
+      "...  ...  ip14 ip14 ...  ...  ..." 
+      "...  ...  ip14 ip14 ip12 ip12 ip12" 
+      "...  ...  ...  ...  ip12 ip12 ip12" 
+      "...  ...  ...  ...  ip12 ip12 ip12" 
+      "ip15 ip15 ...  ...  ...  ...  ..." 
+      "ip15 ip15 ...  ...  ...  ...  ..." 
+      "...  ...  ip16 ip16 ...  ...  ..." 
+      "...  ...  ip16 ip16 ...  ...  ..." 
+      "...  ...  ...  ip17 ip17 ...  ..." 
+      "...  ip18 ip18 ip17 ip17 ...  ..." 
+      "...  ip18 ip18 ...  ...  ip19 ip19" 
+      "...  ...  ...  ...  ...  ip19 ip19";
+  }
+}
+
+@media (min-width:991px) and (max-width:1210.9px) {
+  .loading-grid {
+    --gridTemplateColumns: 9;
+    grid-template-areas: 
+      "...  ...  ip0  ip0  ip0  ip3  ip3  ip4  ip4" 
+      "ip2  ip2  ip0  ip0  ip0  ip3  ip3  ip4  ip4"
+      "ip2  ip2  ip0  ip0  ip0  ip1  ip1  ip1  ..." 
+      "...  ...  ...  ip6  ip6  ip1  ip1  ip1  ..." 
+      "...  ip5  ip5  ip6  ip6  ip1  ip1  ip1  ..." 
+      "...  ip5  ip5  ip8  ip8  ...  ip9  ip9  ..." 
+      "...  ip7  ip7  ip8  ip8  ...  ip9  ip9  ..." 
+      "...  ip7  ip7  ...  ...  ...  ...  ...  ..." 
+      "...  ...  ip10 ip10 ip10 ...  ip13 ip13 ..." 
+      "...  ...  ip10 ip10 ip10 ...  ip13 ip13 ..." 
+      "...  ...  ip10 ip10 ip10 ...  ...  ...  ..." 
+      "ip14 ip14 ...  ...  ...  ...  ...  ...  ..."
+      "ip14 ip14 ...  ...  ...  ...  ip11 ip11 ip11"
+      "...  ...  ...  ...  ...  ...  ip11 ip11 ip11" 
+      "...  ip15 ip15 ...  ...  ...  ip11 ip11 ip11"
+      "...  ip15 ip15 ...  ...  ...  ...  ...  ..."
+      "...  ...  ...  ...  ...  ...  ...  ...  ..." 
+      "...  ...  ...  ...  ip12 ip12 ip12 ...  ..."
+      "...  ...  ...  ...  ip12 ip12 ip12 ...  ..." 
+      "...  ip16 ip16 ...  ip12 ip12 ip12 ...  ..." 
+      "...  ip16 ip16 ip17 ip17 ...  ...  ...  ..." 
+      "...  ...  ...  ip17 ip17 ...  ...  ...  ..." 
+      "...  ...  ...  ...  ...  ...  ...  ip18 ip18"
+      "...  ...  ...  ...  ...  ...  ...  ip18 ip18";
+  }
+}
+
+@media (min-width:1211px) and (max-width:1320.9px) {
+  .loading-grid {
+    --gridTemplateColumns: 11;
+    grid-template-areas: 
+      "...  ...  ip0  ip0  ip0  ip3  ip3  ip4  ip4  ip5  ip5"
+      "ip2  ip2  ip0  ip0  ip0  ip3  ip3  ip4  ip4  ip5  ip5"
+      "ip2  ip2  ip0  ip0  ip0  ip1  ip1  ip1  ...  ip6  ip6"
+      "...  ...  ...  ...  ...  ip1  ip1  ip1  ...  ip6  ip6"
+      "...  ip7  ip7  ip8  ip8  ip1  ip1  ip1  ...  ip9  ip9"
+      "...  ip7  ip7  ip8  ip8  ...  ...  ...  ...  ip9  ip9"
+      "...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ..."
+      "...  ...  ...  ...  ...  ...  ip10 ip10 ip10 ...  ..."
+      "ip11 ip11 ...  ...  ...  ...  ip10 ip10 ip10 ...  ..."
+      "ip11 ip11 ip12 ip12 ...  ...  ip10 ip10 ip10 ...  ..."
+      "...  ...  ip12 ip12 ...  ...  ...  ...  ...  ...  ..."
+      "...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ..."
+      "...  ...  ...  ip13 ip13 ip13 ...  ...  ...  ...  ..."
+      "...  ...  ...  ip13 ip13 ip13 ...  ip14 ip14 ...  ..."
+      "...  ...  ...  ip13 ip13 ip13 ...  ip14 ip14 ...  ..."
+      "...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ..."
+      "...  ip15 ip15 ...  ...  ...  ...  ...  ...  ip16 ip16"
+      "...  ip15 ip15 ip17 ip17 ...  ...  ...  ...  ip16 ip16"
+      "...  ...  ...  ip17 ip17 ...  ...  ...  ...  ...  ...";
+  }
+}
+
+@media (min-width:1321px) and (max-width:1540.9px) {
+  .loading-grid {
+    --gridTemplateColumns: 12;
+    grid-template-areas: 
+      "...  ...  ip0  ip0  ip0  ip3  ip3  ip4  ip4  ip5  ip5  ..."
+      "ip2  ip2  ip0  ip0  ip0  ip3  ip3  ip4  ip4  ip5  ip5  ..."
+      "ip2  ip2  ip0  ip0  ip0  ip1  ip1  ip1  ...  ip6  ip6  ..."
+      "...  ...  ...  ...  ...  ip1  ip1  ip1  ...  ip6  ip6  ..."
+      "...  ip7  ip7  ip8  ip8  ip1  ip1  ip1  ...  ip9  ip9  ..."
+      "...  ip7  ip7  ip8  ip8  ...  ...  ...  ...  ip9  ip9  ..."
+      "...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ..."
+      "...  ...  ...  ...  ...  ...  ...  ip10 ip10 ...  ...  ..."
+      "ip11 ip11 ...  ...  ...  ...  ...  ip10 ip10 ...  ...  ..."
+      "ip11 ip11 ip12 ip12 ...  ...  ...  ...  ...  ...  ...  ..."
+      "...  ...  ip12 ip12 ...  ...  ...  ...  ...  ...  ...  ..."
+      "...  ...  ...  ...  ...  ...  ip13 ip13 ...  ...  ...  ..."
+      "...  ...  ...  ...  ...  ...  ip13 ip13 ...  ...  ...  ..."
+      "...  ip14 ip14 ...  ...  ...  ...  ...  ...  ...  ...  ..."
+      "...  ip14 ip14 ...  ...  ...  ...  ...  ...  ip15 ip15 ..."
+      "...  ...  ...  ...  ...  ...  ...  ...  ...  ip15 ip15 ...";
+  }
+}
+
+@media (min-width:1541px) and (max-width:1870.9px) {
+  .loading-grid {
+    --gridTemplateColumns: 14;
+    grid-template-areas: 
+      "...  ...  ip0  ip0  ip0  ip4  ip4  ...  ...  ...  ...  ...  ip5  ip5"
+      "...  ...  ip0  ip0  ip0  ip4  ip4  ...  ip2  ip2  ip2  ...  ip5  ip5"
+      "ip3  ip3  ip0  ip0  ip0  ...  ...  ...  ip2  ip2  ip2  ...  ip6  ip6"
+      "ip3  ip3  ...  ...  ...  ip1  ip1  ip1  ip2  ip2  ip2  ...  ip6  ip6"
+      "ip7  ip7  ...  ip8  ip8  ip1  ip1  ip1  ip9  ip9  ip10 ip10 ...  ..."
+      "ip7  ip7  ...  ip8  ip8  ip1  ip1  ip1  ip9  ip9  ip10 ip10 ...  ..."
+      "...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ..."
+      "...  ...  ...  ...  ...  ...  ...  ...  ip11 ip11 ip11 ...  ...  ..."
+      "ip12 ip12 ...  ...  ...  ...  ...  ...  ip11 ip11 ip11 ...  ...  ..."
+      "ip12 ip12 ...  ...  ...  ...  ...  ...  ip11 ip11 ip11 ...  ...  ..."
+      "...  ...  ip13 ip13 ...  ...  ...  ...  ...  ...  ...  ...  ...  ..."
+      "...  ...  ip13 ip13 ...  ...  ...  ...  ...  ...  ...  ...  ...  ..."
+      "...  ...  ...  ...  ...  ...  ip14 ip14 ...  ...  ...  ip15 ip15 ip15"
+      "ip16 ip16 ...  ...  ...  ...  ip14 ip14 ...  ...  ...  ip15 ip15 ip15"
+      "ip16 ip16 ...  ...  ...  ...  ...  ...  ...  ...  ...  ip15 ip15 ip15";
+  }
+}
+
+@media (min-width:1871px) {
+  .loading-grid {
+    --gridTemplateColumns: 17;
+    grid-template-areas: 
+      "...  ...  ip0  ip0  ip0  ...  ...  ...  ...  ...  ...  ...  ...  ip7  ip7  ip8  ip8"
+      "...  ...  ip0  ip0  ip0  ip4  ip4  ip5  ip5  ip2  ip2  ip2  ...  ip7  ip7  ip8  ip8"
+      "...  ...  ip0  ip0  ip0  ip4  ip4  ip5  ip5  ip2  ip2  ip2  ip6  ip6  ip3  ip3  ip3"
+      "ip9  ip9  ip10 ip10 ip11 ip11 ip1  ip1  ip1  ip2  ip2  ip2  ip6  ip6  ip3  ip3  ip3"
+      "ip9  ip9  ip10 ip10 ip11 ip11 ip1  ip1  ip1  ip12 ip12 ip13 ip13 ...  ip3  ip3  ip3"
+      "...  ip14 ip14 ip15 ip15 ...  ip1  ip1  ip1  ip12 ip12 ip13 ip13 ip16 ip16 ip17 ip17"
+      "...  ip14 ip14 ip15 ip15 ...  ip18 ip18 ip19 ip19 ip20 ip20 ...  ip16 ip16 ip17 ip17"
+      "...  ...  ...  ...  ...  ...  ip18 ip18 ip19 ip19 ip20 ip20 ...  ...  ...  ...  ..."
+      "...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ..."
+      "ip22 ip22 ...  ...  ...  ...  ...  ...  ...  ...  ip21 ip21 ip21 ...  ...  ...  ..."
+      "ip22 ip22 ...  ...  ...  ...  ip24 ip24 ...  ...  ip21 ip21 ip21 ...  ...  ...  ..."
+      "...  ...  ip23 ip23 ...  ...  ip24 ip24 ...  ...  ip21 ip21 ip21 ...  ...  ...  ..."
+      "...  ...  ip23 ip23 ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ip25 ip25"
+      "...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ip25 ip25";
+  }
+}
+
+/* Grid area assignments */
+.loading-grid .ip0 {
+  grid-area: ip0;
+}
+
+.loading-grid .ip1 {
+  grid-area: ip1;
+}
+
+.loading-grid .ip2 {
+  grid-area: ip2;
+}
+
+.loading-grid .ip3 {
+  grid-area: ip3;
+}
+
+.loading-grid .ip4 {
+  grid-area: ip4;
+}
+
+.loading-grid .ip5 {
+  grid-area: ip5;
+}
+
+.loading-grid .ip6 {
+  grid-area: ip6;
+}
+
+.loading-grid .ip7 {
+  grid-area: ip7;
+}
+
+.loading-grid .ip8 {
+  grid-area: ip8;
+}
+
+.loading-grid .ip9 {
+  grid-area: ip9;
+}
+
+.loading-grid .ip10 {
+  grid-area: ip10;
+}
+
+.loading-grid .ip11 {
+  grid-area: ip11;
+}
+
+.loading-grid .ip12 {
+  grid-area: ip12;
+}
+
+.loading-grid .ip13 {
+  grid-area: ip13;
+}
+
+.loading-grid .ip14 {
+  grid-area: ip14;
+}
+
+.loading-grid .ip15 {
+  grid-area: ip15;
+}
+
+.loading-grid .ip16 {
+  grid-area: ip16;
+}
+
+.loading-grid .ip17 {
+  grid-area: ip17;
+}
+
+.loading-grid .ip18 {
+  grid-area: ip18;
+}
+
+.loading-grid .ip19 {
+  grid-area: ip19;
+}
+
+/* Add grid area assignments for each ip20-ip25 */
+.loading-grid .ip20 {
+  grid-area: ip20;
+}
+
+.loading-grid .ip21 {
+  grid-area: ip21;
+}
+
+.loading-grid .ip22 {
+  grid-area: ip22;
+}
+
+.loading-grid .ip23 {
+  grid-area: ip23;
+}
+
+.loading-grid .ip24 {
+  grid-area: ip24;
+}
+
+.loading-grid .ip25 {
+  grid-area: ip25;
+}
+
+/* Loading item styles */
+.loading-item {
+  aspect-ratio: 1;
+  background: var(--green-8);
+  border-radius: 16px;
+  box-shadow: var(--shadow-mid);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Loading animation */
+.loading-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg,
+      transparent,
+      var(--green-7),
+      transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
