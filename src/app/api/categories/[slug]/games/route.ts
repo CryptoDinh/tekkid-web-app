@@ -18,7 +18,7 @@ export async function GET(
     const transformedGames = games.map(game => ({
       ...game,
       categories: game.category_ids,
-      tags: game.tag_ids ? JSON.parse(game.tag_ids) : [],
+      tags: game.tag_ids,
       featured: game.featured,
       landscape: game.w > game.h
     }));
